@@ -15,6 +15,13 @@ students = [
         "age": 20,
         "department": "CE",
         "marks": 85
+    },
+    {
+        "id": 102,
+        "name": "Alisha",
+        "age": 19,
+        "department": "CS",
+        "marks": 90
     }
 ]
 
@@ -96,10 +103,12 @@ def add_student():
         "marks": student_marks
     }
     students.append(student)
-    print("Student added successfully!")
+    print("Student added successfully!\n")
+
 
 
 def view_students():
+    print("\n======= View Students ========")
     if not students:
         print("No students found.")
         return
@@ -110,8 +119,32 @@ def view_students():
         print(f"\n Student {num}")
         print("---------------------------")
         for key,value in student.items():
-            print(f"{key}: {value}")
+            print(f"{key.capitalize()}: {value}")
         num+= 1
+
+def search_student():
+    print("\n======= Search Student ========")
+    while True:
+        try:
+            id_found = int(input("Enter the student ID to search: "))
+            if id_found < 0:
+                print("Student ID cannot be negative.")
+                continue
+            student_found = False
+            for student in students:
+                if student["id"] == id_found:
+                    student_found = True
+                    print("Student found successfully")
+                    print("--------------------------")
+                    for key, value in student.items():
+                        print(f"{key.capitalize()}: {value}")
+                    print("--------------------------")
+                    break
+            if not student_found:
+                print("Student not found.")
+            break
+        except ValueError:
+            print("Please enter a valid integer for the Student ID.")
 
 def main():
     while True:
@@ -129,7 +162,7 @@ def main():
             view_students()
 
         elif choice == 3:
-            print("Feature coming soon...")
+            search_student()
 
         elif choice == 4:
             print("Feature coming soon...")
