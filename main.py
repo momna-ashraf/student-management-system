@@ -99,6 +99,20 @@ def add_student():
     print("Student added successfully!")
 
 
+def view_students():
+    if not students:
+        print("No students found.")
+        return
+
+    num = 1
+    print("\n====== Students list ========")
+    for student in students:
+        print(f"\n Student {num}")
+        print("---------------------------")
+        for key,value in student.items():
+            print(f"{key}: {value}")
+        num+= 1
+
 def main():
     while True:
         display_menu()
@@ -112,7 +126,7 @@ def main():
             add_student()
 
         elif choice == 2:
-            print("Feature coming soon...")
+            view_students()
 
         elif choice == 3:
             print("Feature coming soon...")
