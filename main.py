@@ -46,7 +46,6 @@ def add_student():
         except ValueError:
             print("Please enter a valid integer for the Student ID.")
 
-
     while True:
         student_name = input("Enter the student name: ").strip()
         if student_name == "":
@@ -106,7 +105,6 @@ def add_student():
     print("Student added successfully!\n")
 
 
-
 def view_students():
     print("\n======= View Students ========")
     if not students:
@@ -118,9 +116,10 @@ def view_students():
     for student in students:
         print(f"\n Student {num}")
         print("---------------------------")
-        for key,value in student.items():
+        for key, value in student.items():
             print(f"{key.capitalize()}: {value}")
-        num+= 1
+        num += 1
+
 
 def search_student():
     print("\n======= Search Student ========")
@@ -146,6 +145,120 @@ def search_student():
         except ValueError:
             print("Please enter a valid integer for the Student ID.")
 
+
+def update_student():
+    print("\n======= Update Student ========")
+
+    while True:
+        try:
+            update_student_id = int(input("Enter the student ID: "))
+
+            if update_student_id < 0:
+                print("Student ID cannot be negative.")
+                continue
+
+            student_found = False
+
+            for student in students:
+                if student["id"] == update_student_id:
+                    student_found = True
+                    print("ID found.")
+
+                    while True:
+                        x = input(
+                            "What you wanna update (name, age, department, marks): "
+                        ).lower().strip()
+
+                        if x == "name":
+                            while True:
+                                new_name = input("Enter the student new name: ").strip()
+
+                                if new_name == "":
+                                    print("Name can't be empty")
+                                    continue
+
+                                if new_name.replace(" ", "").isalpha():
+                                    new_name = new_name.title()
+                                    break
+                                else:
+                                    print("Name should contain only letters and spaces.")
+
+                            student["name"] = new_name
+                            print("Updated successfully!")
+                            break
+
+                        elif x == "age":
+                            while True:
+                                try:
+                                    new_age = int(input("Enter the student new age: "))
+
+                                    if new_age < 0:
+                                        print("Age can't be negative")
+                                        continue
+
+                                    if new_age < 15 or new_age > 30:
+                                        print("Age must be between 15 and 30")
+                                        continue
+
+                                    break
+
+                                except ValueError:
+                                    print("Age must be a number")
+
+                            student["age"] = new_age
+                            print("Updated successfully!")
+                            break
+
+                        elif x == "department":
+                            while True:
+                                new_department = input("Enter the new department name: ").strip()
+
+                                if new_department == "":
+                                    print("Department name can't be empty")
+                                    continue
+
+                                if new_department.replace(" ", "").isalpha():
+                                    new_department = new_department.title()
+                                    break
+                                else:
+                                    print("Department name should contain only letters and spaces.")
+
+                            student["department"] = new_department
+                            print("Updated successfully!")
+                            break
+
+                        elif x == "marks":
+                            while True:
+                                try:
+                                    new_marks = int(input("Enter the student new marks: "))
+
+                                    if 0 <= new_marks <= 100:
+                                        break
+                                    else:
+                                        print("Marks must be between 0 to 100")
+
+                                except ValueError:
+                                    print("Please enter a valid integer for the marks.")
+
+                            student["marks"] = new_marks
+                            print("Updated successfully!")
+                            break
+
+                        else:
+                            print("Please enter a valid choice.")
+                            continue
+
+                    break
+
+            if not student_found:
+                print("Student not found.")
+
+            break
+
+        except ValueError:
+            print("Please enter a valid integer for the Student ID.")
+
+
 def main():
     while True:
         display_menu()
@@ -165,7 +278,7 @@ def main():
             search_student()
 
         elif choice == 4:
-            print("Feature coming soon...")
+            update_student()
 
         elif choice == 5:
             print("Feature coming soon...")
