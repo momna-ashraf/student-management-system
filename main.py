@@ -7,7 +7,6 @@ def display_menu():
     print("5. Delete Student")
     print("6. Exit")
 
-
 students = [
     {
         "id": 101,
@@ -259,6 +258,36 @@ def update_student():
             print("Please enter a valid integer for the Student ID.")
 
 
+def delete_student():
+    while True:
+        try:
+            id_delete = int(input("Enter student ID to delete: "))
+            student_found = False
+
+            if id_delete < 0:
+                print("Student ID cannot be negative.")
+                continue
+
+            for student in students:
+                if student["id"] == id_delete:
+                    student_found = True
+                    print("ID found.")
+                    print("--------------------------")
+                    for key, value in student.items():
+                        print(f"{key.capitalize()}: {value}")
+                    print("--------------------------")
+                    students.remove(student)
+                    print("Student removed successfully!")
+                    break
+            if not student_found:
+                print("Student not found")
+
+            break
+
+        except ValueError:
+            print("Please Enter a valid ID")
+
+
 def main():
     while True:
         display_menu()
@@ -281,7 +310,7 @@ def main():
             update_student()
 
         elif choice == 5:
-            print("Feature coming soon...")
+            delete_student()
 
         elif choice == 6:
             print("Thank you for using Student Management System")
