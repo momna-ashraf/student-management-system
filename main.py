@@ -7,6 +7,7 @@ def display_menu():
     print("5. Delete Student")
     print("6. Exit")
 
+
 students = [
     {
         "id": 101,
@@ -25,73 +26,105 @@ students = [
 ]
 
 
-def add_student():
-    print("\n======= Add Student ========")
+def get_valid_name(message):
     while True:
-        try:
-            student_id = int(input("Enter the student ID: "))
-            if student_id < 0:
-                print("Student ID cannot be negative.")
-                continue
-            duplicate_found = False
-            for student in students:
-                if student["id"] == student_id:
-                    duplicate_found = True
-                    break
-            if duplicate_found:
-                print("ID must be unique.")
-                continue
-            break
-        except ValueError:
-            print("Please enter a valid integer for the Student ID.")
+        name = input(message).strip()
 
-    while True:
-        student_name = input("Enter the student name: ").strip()
-        if student_name == "":
+        if name == "":
             print("Name can't be empty")
             continue
-        if student_name.replace(" ", "").isalpha():
-            student_name = student_name.title()
-            break
+
+        if name.replace(" ", "").isalpha():
+            return name.title()
         else:
             print("Name should contain only letters and spaces.")
-            continue
 
+
+def get_valid_age(message):
     while True:
         try:
-            student_age = int(input("Enter the student age: "))
-            if student_age < 0:
+            age = int(input(message))
+            if age < 0:
                 print("Age can't be negative")
                 continue
-            elif student_age < 15 or student_age > 30:
+            elif age < 15 or age > 30:
                 print("Age must be between 15 and 30")
                 continue
-
-            break
+            return age
         except ValueError:
             print("Age must be a number")
 
+
+def get_valid_department(message):
     while True:
-        department_name = input("Enter the department name: ").strip()
-        if department_name == "":
+        department = input(message).strip()
+
+        if department == "":
             print("Department name can't be empty")
             continue
-        if department_name.replace(" ", "").isalpha():
-            department_name = department_name.title()
-            break
+
+        if department.replace(" ", "").isalpha():
+            return department.title()
         else:
             print("Department name should contain only letters and spaces.")
-            continue
 
+
+def get_valid_marks(message):
     while True:
         try:
-            student_marks = int(input("Enter the student marks: "))
-            if 0 <= student_marks <= 100:
-                break
+            marks = int(input(message))
+            if 0 <= marks <= 100:
+                return marks
             else:
                 print("Marks must be between 0 to 100")
         except ValueError:
             print("Please enter a valid integer for the marks.")
+
+
+def get_valid_id(message):
+    while True:
+        try:
+            student_id_valid = int(input(message))
+            if student_id_valid < 0:
+                print("Student ID cannot be negative.")
+                continue
+
+            return student_id_valid
+        except ValueError:
+            print("Please enter a valid integer for the Student ID.")
+
+
+def find_student_by_id(student_id):
+    for student in students:
+        if student["id"] == student_id:
+            return student
+
+    return None
+
+
+def display_student(student):
+    print("--------------------------")
+    for key, value in student.items():
+        print(f"{key.capitalize()}: {value}")
+    print("--------------------------")
+
+
+def add_student():
+    print("\n======= Add Student ========")
+    while True:
+        student_id = get_valid_id("Enter student ID: ")
+        if find_student_by_id(student_id):
+            print("ID must be unique.")
+            continue
+        break
+
+    student_name = get_valid_name("Enter student name: ")
+
+    student_age = get_valid_age("Enter student age: ")
+
+    department_name = get_valid_department("Enter student department: ")
+
+    student_marks = get_valid_marks("Enter student marks: ")
 
     student = {
         "id": student_id,
@@ -113,179 +146,73 @@ def view_students():
     num = 1
     print("\n====== Students list ========")
     for student in students:
-        print(f"\n Student {num}")
-        print("---------------------------")
-        for key, value in student.items():
-            print(f"{key.capitalize()}: {value}")
+        print(f"\nStudent {num}")
+        display_student(student)
         num += 1
 
 
 def search_student():
     print("\n======= Search Student ========")
-    while True:
-        try:
-            id_found = int(input("Enter the student ID to search: "))
-            if id_found < 0:
-                print("Student ID cannot be negative.")
-                continue
-            student_found = False
-            for student in students:
-                if student["id"] == id_found:
-                    student_found = True
-                    print("Student found successfully")
-                    print("--------------------------")
-                    for key, value in student.items():
-                        print(f"{key.capitalize()}: {value}")
-                    print("--------------------------")
-                    break
-            if not student_found:
-                print("Student not found.")
-            break
-        except ValueError:
-            print("Please enter a valid integer for the Student ID.")
+    student_id = get_valid_id("Enter the student ID to search:")
+    student = find_student_by_id(student_id)
+
+    if student:
+        print("Student found successfully")
+        display_student(student)
+    else:
+        print("Student not found.")
 
 
 def update_student():
     print("\n======= Update Student ========")
+    update_student_id = get_valid_id("Enter ID of student you want to update: ")
+    student = find_student_by_id(update_student_id)
+    if not student:
+        print("Student not found.")
+        return
+
+    display_student(student)
 
     while True:
-        try:
-            update_student_id = int(input("Enter the student ID: "))
+        x = input(
+            "What you wanna update (name, age, department, marks): "
+        ).lower().strip()
 
-            if update_student_id < 0:
-                print("Student ID cannot be negative.")
-                continue
-
-            student_found = False
-
-            for student in students:
-                if student["id"] == update_student_id:
-                    student_found = True
-                    print("ID found.")
-
-                    while True:
-                        x = input(
-                            "What you wanna update (name, age, department, marks): "
-                        ).lower().strip()
-
-                        if x == "name":
-                            while True:
-                                new_name = input("Enter the student new name: ").strip()
-
-                                if new_name == "":
-                                    print("Name can't be empty")
-                                    continue
-
-                                if new_name.replace(" ", "").isalpha():
-                                    new_name = new_name.title()
-                                    break
-                                else:
-                                    print("Name should contain only letters and spaces.")
-
-                            student["name"] = new_name
-                            print("Updated successfully!")
-                            break
-
-                        elif x == "age":
-                            while True:
-                                try:
-                                    new_age = int(input("Enter the student new age: "))
-
-                                    if new_age < 0:
-                                        print("Age can't be negative")
-                                        continue
-
-                                    if new_age < 15 or new_age > 30:
-                                        print("Age must be between 15 and 30")
-                                        continue
-
-                                    break
-
-                                except ValueError:
-                                    print("Age must be a number")
-
-                            student["age"] = new_age
-                            print("Updated successfully!")
-                            break
-
-                        elif x == "department":
-                            while True:
-                                new_department = input("Enter the new department name: ").strip()
-
-                                if new_department == "":
-                                    print("Department name can't be empty")
-                                    continue
-
-                                if new_department.replace(" ", "").isalpha():
-                                    new_department = new_department.title()
-                                    break
-                                else:
-                                    print("Department name should contain only letters and spaces.")
-
-                            student["department"] = new_department
-                            print("Updated successfully!")
-                            break
-
-                        elif x == "marks":
-                            while True:
-                                try:
-                                    new_marks = int(input("Enter the student new marks: "))
-
-                                    if 0 <= new_marks <= 100:
-                                        break
-                                    else:
-                                        print("Marks must be between 0 to 100")
-
-                                except ValueError:
-                                    print("Please enter a valid integer for the marks.")
-
-                            student["marks"] = new_marks
-                            print("Updated successfully!")
-                            break
-
-                        else:
-                            print("Please enter a valid choice.")
-                            continue
-
-                    break
-
-            if not student_found:
-                print("Student not found.")
-
+        if x == "name":
+            student["name"] = get_valid_name("Enter Student's new name: ")
+            print("Updated successfully!")
             break
 
-        except ValueError:
-            print("Please enter a valid integer for the Student ID.")
+        elif x == "age":
+            student["age"] = get_valid_age("Enter student's new age: ")
+            print("Updated successfully!")
+            break
+
+        elif x == "department":
+            student["department"] = get_valid_department("Enter student's new department: ")
+            print("Updated successfully!")
+            break
+
+        elif x == "marks":
+            student["marks"] = get_valid_marks("Enter student's new marks: ")
+            print("Updated successfully!")
+            break
+        else:
+            print("Please enter a valid choice.")
 
 
 def delete_student():
-    while True:
-        try:
-            id_delete = int(input("Enter student ID to delete: "))
-            student_found = False
+    print("\n======= Delete Student ========")
+    id_delete = get_valid_id("Enter student ID to delete: ")
 
-            if id_delete < 0:
-                print("Student ID cannot be negative.")
-                continue
+    student = find_student_by_id(id_delete)
 
-            for student in students:
-                if student["id"] == id_delete:
-                    student_found = True
-                    print("ID found.")
-                    print("--------------------------")
-                    for key, value in student.items():
-                        print(f"{key.capitalize()}: {value}")
-                    print("--------------------------")
-                    students.remove(student)
-                    print("Student removed successfully!")
-                    break
-            if not student_found:
-                print("Student not found")
-
-            break
-
-        except ValueError:
-            print("Please Enter a valid ID")
+    if student:
+        display_student(student)
+        students.remove(student)
+        print("Student deleted successfully!")
+    else:
+        print("Student not found.")
 
 
 def main():
