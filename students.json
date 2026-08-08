@@ -1,0 +1,30 @@
+[
+    {
+        "id": 101,
+        "name": "Ali",
+        "age": 22,
+        "department": "Computer Science",
+        "marks": 90
+    },
+    {
+        "id": 102,
+        "name": "Maria Ahsan",
+        "age": 23,
+        "department": "Data Science",
+        "marks": 67
+    },
+    {
+        "id": 103,
+        "name": "Minahil Irfan",
+        "age": 24,
+        "department": "Cyber Security",
+        "marks": 87
+    },
+    {
+        "id": 105,
+        "name": "Muzamil Talha",
+        "age": 30,
+        "department": "Computer Engineering",
+        "marks": 98
+    }
+]

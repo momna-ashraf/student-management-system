@@ -1,3 +1,6 @@
+import json
+
+
 def display_menu():
     print("\n========== Student Management System ============")
     print("1. Add Student")
@@ -8,22 +11,31 @@ def display_menu():
     print("6. Exit")
 
 
-students = [
-    {
-        "id": 101,
-        "name": "Ali",
-        "age": 20,
-        "department": "CE",
-        "marks": 85
-    },
-    {
-        "id": 102,
-        "name": "Alisha",
-        "age": 19,
-        "department": "CS",
-        "marks": 90
-    }
-]
+students = []
+def load_students():
+    global students
+    try:
+        with open("students.json", "r") as file:
+            if file.read().strip() == "":
+                students = []
+                return False
+            file.seek(0)
+            students = json.load(file)
+            if not isinstance(students,list):
+                print("Loading data failed.")
+                return True
+            return False
+    except FileNotFoundError:
+        students = []
+        return False
+    except json.JSONDecodeError:
+        print("Their seems to be an error with students data\nKindly handle it.")
+        return True
+
+
+def save_students():
+    with open("students.json", "w") as file:
+        json.dump(students, file, indent=4)
 
 
 def get_valid_name(message):
@@ -134,6 +146,7 @@ def add_student():
         "marks": student_marks
     }
     students.append(student)
+    save_students()
     print("Student added successfully!\n")
 
 
@@ -181,21 +194,25 @@ def update_student():
         if x == "name":
             student["name"] = get_valid_name("Enter Student's new name: ")
             print("Updated successfully!")
+            save_students()
             break
 
         elif x == "age":
             student["age"] = get_valid_age("Enter student's new age: ")
             print("Updated successfully!")
+            save_students()
             break
 
         elif x == "department":
             student["department"] = get_valid_department("Enter student's new department: ")
             print("Updated successfully!")
+            save_students()
             break
 
         elif x == "marks":
             student["marks"] = get_valid_marks("Enter student's new marks: ")
             print("Updated successfully!")
+            save_students()
             break
         else:
             print("Please enter a valid choice.")
@@ -210,12 +227,16 @@ def delete_student():
     if student:
         display_student(student)
         students.remove(student)
+        save_students()
         print("Student deleted successfully!")
     else:
         print("Student not found.")
 
 
 def main():
+    stop = load_students()
+    if stop:
+        return
     while True:
         display_menu()
         try:
@@ -223,7 +244,6 @@ def main():
         except ValueError:
             print("Please enter a valid number.")
             continue
-
         if choice == 1:
             add_student()
 
