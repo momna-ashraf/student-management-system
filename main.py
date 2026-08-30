@@ -47,7 +47,7 @@ class StudentManagementSystem():
         print("\n====== Students list ========")
         for student in self.students:
             print(f"\nStudent {num}")
-            Student.display_student(student)
+            student.display_student()
             num += 1
 
     def search_student(self):
@@ -57,7 +57,7 @@ class StudentManagementSystem():
 
         if student:
             print("Student found successfully")
-            Student.display_student(student)
+            student.display_student()
         else:
             print("Student not found.")
 
@@ -140,15 +140,22 @@ class StudentManagementSystem():
                     print("Loading data failed.")
                     return True
                 for student_data in data:
-                    s = Student(
-                        student_data["id"],
-                        student_data["name"],
-                        student_data["age"],
-                        student_data["department"],
-                        student_data["marks"]
-                    )
-                    self.students.append(s)
+                    try:
+                        s = Student(
+                            student_data["id"],
+                            student_data["name"],
+                            student_data["age"],
+                            student_data["department"],
+                            student_data["marks"]
+                        )
+                        self.students.append(s)
+                    except KeyError:
+                        print("Student data is missing a required field.")
+                        print("Skipping this student.")
+                        continue
                 return False
+
+
         except FileNotFoundError:
             self.students = []
             return False
