@@ -1,6 +1,3 @@
-import json
-
-
 def display_menu():
     print("\n========== Student Management System ============")
     print("1. Add Student")
@@ -11,31 +8,131 @@ def display_menu():
     print("6. Exit")
 
 
-students = []
-def load_students():
-    global students
-    try:
-        with open("students.json", "r") as file:
-            if file.read().strip() == "":
-                students = []
-                return False
-            file.seek(0)
-            students = json.load(file)
-            if not isinstance(students,list):
-                print("Loading data failed.")
-                return True
-            return False
-    except FileNotFoundError:
-        students = []
-        return False
-    except json.JSONDecodeError:
-        print("Their seems to be an error with students data\nKindly handle it.")
-        return True
+class StudentManagementSystem():
+    def __init__(self, students=None):
+        if students is None:
+            students = []
+        self.students = students
+
+    def add_student(self):
+        print("\n======= Add Student ========")
+        while True:
+            student_id = get_valid_id("Enter student ID: ")
+            if self.find_student_by_id(student_id):
+                print("ID must be unique.")
+                continue
+            break
+
+        student_name = get_valid_name("Enter student name: ")
+
+        student_age = get_valid_age("Enter student age: ")
+
+        department_name = get_valid_department("Enter student department: ")
+
+        student_marks = get_valid_marks("Enter student marks: ")
+
+        student = Student(student_id, student_name, student_age, department_name, student_marks)
+        self.students.append(student)
+        print("Student added successfully!\n")
+
+    def view_students(self):
+        print("\n======= View Students ========")
+        if not self.students:
+            print("No students found.")
+            return
+
+        num = 1
+        print("\n====== Students list ========")
+        for student in self.students:
+            print(f"\nStudent {num}")
+            Student.display_student(student)
+            num += 1
+
+    def search_student(self):
+        print("\n======= Search Student ========")
+        student_id = get_valid_id("Enter the student ID to search:")
+        student = self.find_student_by_id(student_id)
+
+        if student:
+            print("Student found successfully")
+            Student.display_student(student)
+        else:
+            print("Student not found.")
+
+    def update_student(self):
+        print("\n======= Update Student ========")
+        update_student_id = get_valid_id("Enter ID of student you want to update: ")
+        student = self.find_student_by_id(update_student_id)
+        if not student:
+            print("Student not found.")
+            return
+
+        student.display_student()
+
+        while True:
+            x = input(
+                "What you wanna update (name, age, department, marks): "
+            ).lower().strip()
+
+            if x == "name":
+                student.name = get_valid_name("Enter Student's new name: ")
+                print("Updated successfully!")
+                break
+
+            elif x == "age":
+                student.age = get_valid_age("Enter student's new age: ")
+                print("Updated successfully!")
+                break
+
+            elif x == "department":
+                student.department = get_valid_department("Enter student's new department: ")
+                print("Updated successfully!")
+                break
+
+            elif x == "marks":
+                student.marks = get_valid_marks("Enter student's new marks: ")
+                print("Updated successfully!")
+                break
+            else:
+                print("Please enter a valid choice.")
+
+    def delete_student(self):
+        print("\n======= Delete Student ========")
+        id_delete = get_valid_id("Enter student ID to delete: ")
+
+        student = self.find_student_by_id(id_delete)
+
+        if student:
+            student.display_student()
+            self.students.remove(student)
+            # save_students()
+            print("Student deleted successfully!")
+        else:
+            print("Student not found.")
+
+    def find_student_by_id(self, student_id):
+        for student in self.students:
+            if student.id == student_id:
+                return student
+        return None
 
 
-def save_students():
-    with open("students.json", "w") as file:
-        json.dump(students, file, indent=4)
+class Student():
+    def __init__(self, id, name, age, department, marks):
+        self.id = id
+        self.name = name
+        self.age = age
+        self.department = department
+        self.marks = marks
+
+    def display_student(self):
+        print("--------------------------")
+        print(f"Student Name: {self.name}")
+        print(f"ID: {self.id}")
+        print(f"Age: {self.age}")
+        print(f"Department: {self.department}")
+        print(f"Marks: {self.marks}")
+        print("--------------------------")
 
 
 def get_valid_name(message):
@@ -106,137 +203,7 @@ def get_valid_id(message):
             print("Please enter a valid integer for the Student ID.")
 
 
-def find_student_by_id(student_id):
-    for student in students:
-        if student["id"] == student_id:
-            return student
-
-    return None
-
-
-def display_student(student):
-    print("--------------------------")
-    for key, value in student.items():
-        print(f"{key.capitalize()}: {value}")
-    print("--------------------------")
-
-
-def add_student():
-    print("\n======= Add Student ========")
-    while True:
-        student_id = get_valid_id("Enter student ID: ")
-        if find_student_by_id(student_id):
-            print("ID must be unique.")
-            continue
-        break
-
-    student_name = get_valid_name("Enter student name: ")
-
-    student_age = get_valid_age("Enter student age: ")
-
-    department_name = get_valid_department("Enter student department: ")
-
-    student_marks = get_valid_marks("Enter student marks: ")
-
-    student = {
-        "id": student_id,
-        "name": student_name,
-        "age": student_age,
-        "department": department_name,
-        "marks": student_marks
-    }
-    students.append(student)
-    save_students()
-    print("Student added successfully!\n")
-
-
-def view_students():
-    print("\n======= View Students ========")
-    if not students:
-        print("No students found.")
-        return
-
-    num = 1
-    print("\n====== Students list ========")
-    for student in students:
-        print(f"\nStudent {num}")
-        display_student(student)
-        num += 1
-
-
-def search_student():
-    print("\n======= Search Student ========")
-    student_id = get_valid_id("Enter the student ID to search:")
-    student = find_student_by_id(student_id)
-
-    if student:
-        print("Student found successfully")
-        display_student(student)
-    else:
-        print("Student not found.")
-
-
-def update_student():
-    print("\n======= Update Student ========")
-    update_student_id = get_valid_id("Enter ID of student you want to update: ")
-    student = find_student_by_id(update_student_id)
-    if not student:
-        print("Student not found.")
-        return
-
-    display_student(student)
-
-    while True:
-        x = input(
-            "What you wanna update (name, age, department, marks): "
-        ).lower().strip()
-
-        if x == "name":
-            student["name"] = get_valid_name("Enter Student's new name: ")
-            print("Updated successfully!")
-            save_students()
-            break
-
-        elif x == "age":
-            student["age"] = get_valid_age("Enter student's new age: ")
-            print("Updated successfully!")
-            save_students()
-            break
-
-        elif x == "department":
-            student["department"] = get_valid_department("Enter student's new department: ")
-            print("Updated successfully!")
-            save_students()
-            break
-
-        elif x == "marks":
-            student["marks"] = get_valid_marks("Enter student's new marks: ")
-            print("Updated successfully!")
-            save_students()
-            break
-        else:
-            print("Please enter a valid choice.")
-
-
-def delete_student():
-    print("\n======= Delete Student ========")
-    id_delete = get_valid_id("Enter student ID to delete: ")
-
-    student = find_student_by_id(id_delete)
-
-    if student:
-        display_student(student)
-        students.remove(student)
-        save_students()
-        print("Student deleted successfully!")
-    else:
-        print("Student not found.")
-
-
 def main():
-    stop = load_students()
-    if stop:
-        return
     while True:
         display_menu()
         try:
@@ -245,19 +212,19 @@ def main():
             print("Please enter a valid number.")
             continue
         if choice == 1:
-            add_student()
+            system.add_student()
 
         elif choice == 2:
-            view_students()
+            system.view_students()
 
         elif choice == 3:
-            search_student()
+            system.search_student()
 
         elif choice == 4:
-            update_student()
+            system.update_student()
 
         elif choice == 5:
-            delete_student()
+            system.delete_student()
 
         elif choice == 6:
             print("Thank you for using Student Management System")
@@ -267,4 +234,5 @@ def main():
 
 
 if __name__ == "__main__":
+    system = StudentManagementSystem()
     main()
