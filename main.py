@@ -1,3 +1,4 @@
+import json
 def display_menu():
     print("\n========== Student Management System ============")
     print("1. Add Student")
@@ -33,6 +34,7 @@ class StudentManagementSystem():
 
         student = Student(student_id, student_name, student_age, department_name, student_marks)
         self.students.append(student)
+        self.save_students()
         print("Student added successfully!\n")
 
     def view_students(self):
@@ -73,24 +75,27 @@ class StudentManagementSystem():
             x = input(
                 "What you wanna update (name, age, department, marks): "
             ).lower().strip()
-
             if x == "name":
                 student.name = get_valid_name("Enter Student's new name: ")
+                self.save_students()
                 print("Updated successfully!")
                 break
 
             elif x == "age":
                 student.age = get_valid_age("Enter student's new age: ")
+                self.save_students()
                 print("Updated successfully!")
                 break
 
             elif x == "department":
                 student.department = get_valid_department("Enter student's new department: ")
+                self.save_students()
                 print("Updated successfully!")
                 break
 
             elif x == "marks":
                 student.marks = get_valid_marks("Enter student's new marks: ")
+                self.save_students()
                 print("Updated successfully!")
                 break
             else:
@@ -105,7 +110,7 @@ class StudentManagementSystem():
         if student:
             student.display_student()
             self.students.remove(student)
-            # save_students()
+            self.save_students()
             print("Student deleted successfully!")
         else:
             print("Student not found.")
@@ -116,6 +121,40 @@ class StudentManagementSystem():
                 return student
         return None
 
+    def save_students(self):
+        student_data = []
+        for student in self.students:
+            student_data.append(student.to_dict())
+        with open("students.json", "w") as file:
+            json.dump(student_data, file, indent=4)
+
+    def load_students(self):
+        try:
+            with open("students.json", "r") as file:
+                if file.read().strip() == "":
+                    self.students = []
+                    return False
+                file.seek(0)
+                data = json.load(file)
+                if not isinstance(data,list):
+                    print("Loading data failed.")
+                    return True
+                for student_data in data:
+                    s = Student(
+                        student_data["id"],
+                        student_data["name"],
+                        student_data["age"],
+                        student_data["department"],
+                        student_data["marks"]
+                    )
+                    self.students.append(s)
+                return False
+        except FileNotFoundError:
+            self.students = []
+            return False
+        except json.JSONDecodeError:
+            print("Their seems to be an error with students data\nKindly handle it.")
+            return True
 
 class Student():
     def __init__(self, id, name, age, department, marks):
@@ -133,6 +172,16 @@ class Student():
         print(f"Department: {self.department}")
         print(f"Marks: {self.marks}")
         print("--------------------------")
+
+    def to_dict(self):
+        std_dict = {
+            "id": self.id,
+            "name": self.name,
+            "age": self.age,
+            "department": self.department,
+            "marks": self.marks
+        }
+        return std_dict
 
 
 def get_valid_name(message):
@@ -204,6 +253,9 @@ def get_valid_id(message):
 
 
 def main():
+    stop = system.load_students()
+    if stop:
+        return
     while True:
         display_menu()
         try:
@@ -211,6 +263,7 @@ def main():
         except ValueError:
             print("Please enter a valid number.")
             continue
+
         if choice == 1:
             system.add_student()
 

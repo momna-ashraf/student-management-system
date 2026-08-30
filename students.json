@@ -1,30 +1,23 @@
 [
     {
-        "id": 101,
-        "name": "Ali",
+        "id": 1,
+        "name": "Alisha",
         "age": 22,
-        "department": "Computer Science",
+        "department": "Computer Engineering",
+        "marks": 66
+    },
+    {
+        "id": 111,
+        "name": "Maria",
+        "age": 22,
+        "department": "Electrical Engineering",
         "marks": 90
     },
     {
-        "id": 102,
-        "name": "Maria Ahsan",
-        "age": 23,
-        "department": "Data Science",
+        "id": 122,
+        "name": "Sudain",
+        "age": 22,
+        "department": "Computer Science",
         "marks": 67
-    },
-    {
-        "id": 103,
-        "name": "Minahil Irfan",
-        "age": 24,
-        "department": "Cyber Security",
-        "marks": 87
-    },
-    {
-        "id": 105,
-        "name": "Muzamil Talha",
-        "age": 30,
-        "department": "Computer Engineering",
-        "marks": 98
     }
 ]
