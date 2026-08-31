@@ -1,22 +1,23 @@
 [
     {
         "id": 1,
-        "name": "Alisha",
+        "name": "Alisha Furqan",
         "age": 22,
         "department": "Computer Engineering",
         "marks": 66
     },
     {
-        "id": 111,
-        "name": "Maria",
-        "age": 22,
-        "marks": 90
+        "id": 2,
+        "name": "Mumtaz Danish",
+        "age": 18,
+        "department": "Computer Science",
+        "marks": 23
     },
     {
-        "id": 122,
-        "name": "Sudain",
-        "age": 22,
-        "department": "Computer Science",
-        "marks": 67
+        "id": 3,
+        "name": "Maliha Noor",
+        "age": 23,
+        "department": "Artificial Intelligence",
+        "marks": 99
     }
 ]

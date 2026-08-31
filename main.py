@@ -1,4 +1,6 @@
 import json
+
+
 def display_menu():
     print("\n========== Student Management System ============")
     print("1. Add Student")
@@ -77,29 +79,18 @@ class StudentManagementSystem():
             ).lower().strip()
             if x == "name":
                 student.name = get_valid_name("Enter Student's new name: ")
-                self.save_students()
-                print("Updated successfully!")
-                break
-
             elif x == "age":
                 student.age = get_valid_age("Enter student's new age: ")
-                self.save_students()
-                print("Updated successfully!")
-                break
-
             elif x == "department":
                 student.department = get_valid_department("Enter student's new department: ")
-                self.save_students()
-                print("Updated successfully!")
-                break
-
             elif x == "marks":
                 student.marks = get_valid_marks("Enter student's new marks: ")
-                self.save_students()
-                print("Updated successfully!")
-                break
             else:
                 print("Please enter a valid choice.")
+                continue
+            self.save_students()
+            print("Updated successfully!")
+            break
 
     def delete_student(self):
         print("\n======= Delete Student ========")
@@ -133,35 +124,57 @@ class StudentManagementSystem():
             with open("students.json", "r") as file:
                 if file.read().strip() == "":
                     self.students = []
-                    return False
+                    return
                 file.seek(0)
                 data = json.load(file)
-                if not isinstance(data,list):
+                if not isinstance(data, list):
                     print("Loading data failed.")
                     return True
-                for student_data in data:
-                    try:
-                        s = Student(
-                            student_data["id"],
-                            student_data["name"],
-                            student_data["age"],
-                            student_data["department"],
-                            student_data["marks"]
-                        )
-                        self.students.append(s)
-                    except KeyError:
-                        print("Student data is missing a required field.")
-                        print("Skipping this student.")
-                        continue
-                return False
+                self.students = []
+                self.convert_students(data)
 
 
         except FileNotFoundError:
             self.students = []
-            return False
         except json.JSONDecodeError:
             print("Their seems to be an error with students data\nKindly handle it.")
             return True
+
+    def convert_students(self, data):
+        ids = set()
+        for student_data in data:
+            try:
+                required = {"id","name", "age", "department","marks"}
+                if not isinstance(student_data,dict):
+                    print("Skipping this student.")
+                    continue
+                is_valid = student_data.keys() >= required
+                if not is_valid:
+                    raise KeyError
+                in_valid = validating_json(student_data)
+                if not in_valid:
+                    print("Skipping this student.")
+                    continue
+                student_id = student_data["id"]
+                if student_id in ids:
+                    print(f"Duplicate student ID {student_id}.")
+                    print("Skipping this student.")
+                    continue
+                s = Student(
+                    student_data["id"],
+                    student_data["name"],
+                    student_data["age"],
+                    student_data["department"],
+                    student_data["marks"]
+                )
+
+                self.students.append(s)
+                ids.add(student_id)
+            except KeyError:
+                print("Student data is missing a required field.")
+                print("Skipping this student.")
+                continue
+
 
 class Student():
     def __init__(self, id, name, age, department, marks):
@@ -259,9 +272,64 @@ def get_valid_id(message):
             print("Please enter a valid integer for the Student ID.")
 
 
+def validating_json(student_data):
+    for key, value in student_data.items():
+        if key == "id":
+            try:
+                student_id_valid = int(value)
+                if student_id_valid < 0:
+                    print("Student ID is negative.")
+                    return False
+            except ValueError:
+                print("Error occurred in ID")
+                return False
+
+        elif key == "name":
+            name = value.strip()
+
+            if name == "":
+                print("Student name is empty")
+                return False
+
+            if not name.replace(" ", "").isalpha():
+                print("Student name doesn't follow require rules.")
+                return False
+        elif key == "age":
+            try:
+                age = int(value)
+                if age < 0:
+                    print("The student's age is negative")
+                    return False
+                elif age < 15 or age > 30:
+                    print("Student's age doesn't follow required rules")
+                    return False
+            except ValueError:
+                print("Student's age doesn't follow required rules")
+                return False
+        elif key == "department":
+            department = value.strip()
+            if department == "":
+                print("The Student's department is empty")
+                return False
+
+            if not department.replace(" ", "").isalpha():
+                print("The student's department doesn't follow required rules")
+                return False
+
+        elif key == "marks":
+            try:
+                marks = int(value)
+                if not 0 <= marks <= 100:
+                    print("Student's marks don't follow required rules")
+                    return False
+            except ValueError:
+                print("Student's marks don't follow required rules")
+                return False
+    return True
+
+
 def main():
-    stop = system.load_students()
-    if stop:
+    if system.load_students():
         return
     while True:
         display_menu()
