@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch
-from main import Student, StudentManagementSystem, get_valid_age, get_valid_marks, get_valid_id, get_valid_text
+from main import Student, StudentManagementSystem, get_valid_age, get_valid_marks, get_valid_id, get_valid_text, \
+    validate_student_data
 
 
 class TestStudentManagementSystem(unittest.TestCase):
@@ -247,3 +248,168 @@ class TestStudentManagementSystem(unittest.TestCase):
         ]
         system.convert_students(data)
         self.assertEqual(len(system.students), 2)
+
+    def test_wrong_data_type_id(self):
+        data = {
+            "student_id": "abc",
+            "name": "Minahil",
+            "age": 21,
+            "department": "Computer Engineering",
+            "marks": 90
+        }
+        result = validate_student_data(data)
+        self.assertFalse(result)
+
+    def test_negative_id_student(self):
+        data = {
+            "student_id": -1,
+            "name": "Minahil",
+            "age": 21,
+            "department": "Computer Engineering",
+            "marks": 90
+        }
+        result = validate_student_data(data)
+        self.assertFalse(result)
+
+    def test_wrong_data_type_name(self):
+        data = {
+            "student_id": 1,
+            "name": 123,
+            "age": 21,
+            "department": "Computer Engineering",
+            "marks": 90
+        }
+        result = validate_student_data(data)
+        self.assertFalse(result)
+
+    def test_empty_name(self):
+        data = {
+            "student_id": 1,
+            "name": "",
+            "age": 21,
+            "department": "Computer Engineering",
+            "marks": 90
+        }
+        result = validate_student_data(data)
+        self.assertFalse(result)
+
+    def test_invalid_name(self):
+        data = {
+            "student_id": 1,
+            "name": "M123",
+            "age": 21,
+            "department": "Computer Engineering",
+            "marks": 90
+        }
+        result = validate_student_data(data)
+        self.assertFalse(result)
+
+    def test_wrong_data_type_age(self):
+        data = {
+            "student_id": 1,
+            "name": "Minahil",
+            "age": "21",
+            "department": "Computer Engineering",
+            "marks": 90
+        }
+        result = validate_student_data(data)
+        self.assertFalse(result)
+
+    def test_age_below_minimum_student(self):
+        data = {
+            "student_id": 1,
+            "name": "Minahil",
+            "age": 14,
+            "department": "Computer Engineering",
+            "marks": 90
+        }
+        result = validate_student_data(data)
+        self.assertFalse(result)
+
+    def test_age_above_maximum_student(self):
+        data = {
+            "student_id": 1,
+            "name": "Minahil",
+            "age": 31,
+            "department": "Computer Engineering",
+            "marks": 90
+        }
+        result = validate_student_data(data)
+        self.assertFalse(result)
+
+    def test_wrong_data_type_department(self):
+        data = {
+            "student_id": 1,
+            "name": "Minahil",
+            "age": 21,
+            "department": 123,
+            "marks": 90
+        }
+        result = validate_student_data(data)
+        self.assertFalse(result)
+
+    def test_empty_department(self):
+        data = {
+            "student_id": 1,
+            "name": "Minahil",
+            "age": 21,
+            "department": "",
+            "marks": 90
+        }
+        result = validate_student_data(data)
+        self.assertFalse(result)
+
+    def test_invalid_department(self):
+        data = {
+            "student_id": 1,
+            "name": "Minahil",
+            "age": 21,
+            "department": "Computer123",
+            "marks": 90
+        }
+        result = validate_student_data(data)
+        self.assertFalse(result)
+
+    def test_wrong_data_type_marks(self):
+        data = {
+            "student_id": 1,
+            "name": "Minahil",
+            "age": 21,
+            "department": "Computer Engineering",
+            "marks": "90"
+        }
+        result = validate_student_data(data)
+        self.assertFalse(result)
+
+    def test_marks_below_minimum_student(self):
+        data = {
+            "student_id": 1,
+            "name": "Minahil",
+            "age": 21,
+            "department": "Computer Engineering",
+            "marks": -1
+        }
+        result = validate_student_data(data)
+        self.assertFalse(result)
+
+    def test_marks_above_maximum_student(self):
+        data = {
+            "student_id": 1,
+            "name": "Minahil",
+            "age": 21,
+            "department": "Computer Engineering",
+            "marks": 101
+        }
+        result = validate_student_data(data)
+        self.assertFalse(result)
+
+    def test_valid_student_data(self):
+        data = {
+            "student_id": 1,
+            "name": "Minahil",
+            "age": 21,
+            "department": "Computer Engineering",
+            "marks": 90
+        }
+        result = validate_student_data(data)
+        self.assertTrue(result)
