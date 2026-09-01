@@ -582,3 +582,35 @@ class TestStudentManagementSystem(unittest.TestCase):
                 system.search_student()
 
         mock_print.assert_any_call("Student not found.")
+
+    def test_update_student_not_found(self):
+        system = StudentManagementSystem()
+        with patch("builtins.input", return_value="1"):
+            with patch("builtins.print") as mock_print:
+                system.update_student()
+        mock_print.assert_any_call("Student not found.")
+
+    def test_update_student(self):
+        student = Student(1, "Minahil", 21, "Computer Engineering", 90)
+        system = StudentManagementSystem([student])
+        with patch("builtins.input", side_effect=["1", "name", "Ayesha"]):
+            with patch.object(system, "save_students", return_value=True):
+                system.update_student()
+        self.assertEqual(student.name, "Ayesha")
+
+    def test_update_student_invalid_choice(self):
+        student = Student(1, "Minahil", 21, "Computer Engineering", 90)
+        system = StudentManagementSystem([student])
+        with patch("builtins.input", side_effect=["1", "invalid", "name", "Ayesha"]):
+            with patch.object(system, "save_students", return_value=True):
+                system.update_student()
+        self.assertEqual(student.name, "Ayesha")
+
+    def test_update_student_save_failure(self):
+        student = Student(1, "Minahil", 21, "Computer Engineering", 90)
+        system = StudentManagementSystem([student])
+        with patch("builtins.input", side_effect=["1", "name", "Ayesha"]):
+            with patch.object(system, "save_students", return_value=False):
+                system.update_student()
+
+        self.assertEqual(student.name, "Minahil")
