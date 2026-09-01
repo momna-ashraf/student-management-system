@@ -549,3 +549,19 @@ class TestStudentManagementSystem(unittest.TestCase):
             with patch.object(system, "save_students", return_value=False):
                 system.add_student()
         self.assertEqual(system.students, [])
+
+    def test_view_students_empty(self):
+        system = StudentManagementSystem()
+        with patch("builtins.print") as mock_print:
+            system.view_students()
+        mock_print.assert_any_call("No students found.")
+
+    def test_view_students(self):
+        student1 = Student(1, "Minahil", 21, "Computer Engineering", 90)
+        student2 = Student(2, "Ayesha", 22, "Electrical Engineering", 85)
+        system = StudentManagementSystem([student1, student2])
+        with patch.object(student1, "display_student") as mock_display1:
+            with patch.object(student2, "display_student") as mock_display2:
+                system.view_students()
+        mock_display1.assert_called_once()
+        mock_display2.assert_called_once()
