@@ -526,8 +526,8 @@ class TestStudentManagementSystem(unittest.TestCase):
 
     def test_add_student(self):
         system = StudentManagementSystem()
-        with patch("builtins.input",side_effect = ["1","Minahil","21","Computer Engineering","90"]):
-            with patch.object(system,"save_students",return_value = True):
+        with patch("builtins.input", side_effect=["1", "Minahil", "21", "Computer Engineering", "90"]):
+            with patch.object(system, "save_students", return_value=True):
                 system.add_student()
         self.assertEqual(len(system.students), 1)
         self.assertEqual(system.students[0].id, 1)
@@ -536,7 +536,7 @@ class TestStudentManagementSystem(unittest.TestCase):
     def test_add_student_duplicate_id(self):
         existing_student = Student(1, "Ayesha", 21, "Computer Engineering", 85)
         system = StudentManagementSystem([existing_student])
-        with patch("builtins.input", side_effect=["1","2","Minahil","21","Computer Engineering","90"]):
+        with patch("builtins.input", side_effect=["1", "2", "Minahil", "21", "Computer Engineering", "90"]):
             with patch.object(system, "save_students", return_value=True):
                 system.add_student()
         self.assertEqual(len(system.students), 2)
@@ -545,7 +545,7 @@ class TestStudentManagementSystem(unittest.TestCase):
 
     def test_add_student_save_failure(self):
         system = StudentManagementSystem()
-        with patch("builtins.input", side_effect=["1","Minahil","21","Computer Engineering","90"]):
+        with patch("builtins.input", side_effect=["1", "Minahil", "21", "Computer Engineering", "90"]):
             with patch.object(system, "save_students", return_value=False):
                 system.add_student()
         self.assertEqual(system.students, [])
@@ -565,3 +565,20 @@ class TestStudentManagementSystem(unittest.TestCase):
                 system.view_students()
         mock_display1.assert_called_once()
         mock_display2.assert_called_once()
+
+    def test_search_student_found(self):
+        student = Student(1, "Minahil", 21, "Computer Engineering", 90)
+        system = StudentManagementSystem([student])
+        with patch("builtins.input", return_value="1"):
+            with patch.object(student, "display_student") as mock_display:
+                system.search_student()
+
+        mock_display.assert_called_once()
+
+    def test_search_student_not_found(self):
+        system = StudentManagementSystem()
+        with patch("builtins.input", return_value="1"):
+            with patch("builtins.print") as mock_print:
+                system.search_student()
+
+        mock_print.assert_any_call("Student not found.")
