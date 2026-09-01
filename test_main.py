@@ -614,3 +614,27 @@ class TestStudentManagementSystem(unittest.TestCase):
                 system.update_student()
 
         self.assertEqual(student.name, "Minahil")
+
+    def test_delete_student_not_found(self):
+        system = StudentManagementSystem()
+        with patch("builtins.input", return_value="1"):
+            with patch("builtins.print") as mock_print:
+                system.delete_student()
+        mock_print.assert_any_call("Student not found.")
+
+    def test_delete_student(self):
+        student = Student(1, "Minahil", 21, "Computer Engineering", 90)
+        system = StudentManagementSystem([student])
+        with patch("builtins.input", return_value="1"):
+            with patch.object(system, "save_students", return_value=True):
+                system.delete_student()
+
+        self.assertEqual(system.students, [])
+
+    def test_delete_student_save_failure(self):
+        student = Student(1, "Minahil", 21, "Computer Engineering", 90)
+        system = StudentManagementSystem([student])
+        with patch("builtins.input", return_value="1"):
+            with patch.object(system, "save_students", return_value=False):
+                system.delete_student()
+        self.assertEqual(system.students, [student])
