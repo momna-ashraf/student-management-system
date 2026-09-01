@@ -523,3 +523,29 @@ class TestStudentManagementSystem(unittest.TestCase):
         result = validate_dict(data)
 
         self.assertTrue(result)
+
+    def test_add_student(self):
+        system = StudentManagementSystem()
+        with patch("builtins.input",side_effect = ["1","Minahil","21","Computer Engineering","90"]):
+            with patch.object(system,"save_students",return_value = True):
+                system.add_student()
+        self.assertEqual(len(system.students), 1)
+        self.assertEqual(system.students[0].id, 1)
+        self.assertEqual(system.students[0].name, "Minahil")
+
+    def test_add_student_duplicate_id(self):
+        existing_student = Student(1, "Ayesha", 21, "Computer Engineering", 85)
+        system = StudentManagementSystem([existing_student])
+        with patch("builtins.input", side_effect=["1","2","Minahil","21","Computer Engineering","90"]):
+            with patch.object(system, "save_students", return_value=True):
+                system.add_student()
+        self.assertEqual(len(system.students), 2)
+        self.assertEqual(system.students[1].id, 2)
+        self.assertEqual(system.students[1].name, "Minahil")
+
+    def test_add_student_save_failure(self):
+        system = StudentManagementSystem()
+        with patch("builtins.input", side_effect=["1","Minahil","21","Computer Engineering","90"]):
+            with patch.object(system, "save_students", return_value=False):
+                system.add_student()
+        self.assertEqual(system.students, [])
