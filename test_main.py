@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 from main import Student, StudentManagementSystem, get_valid_age, get_valid_marks, get_valid_id, get_valid_text, \
-    validate_student_data
+    validate_student_data, validate_dict
 
 
 class TestStudentManagementSystem(unittest.TestCase):
@@ -257,8 +257,12 @@ class TestStudentManagementSystem(unittest.TestCase):
             "department": "Computer Engineering",
             "marks": 90
         }
-        result = validate_student_data(data)
+
+        with patch("builtins.print") as mock_print:
+            result = validate_student_data(data)
+
         self.assertFalse(result)
+        mock_print.assert_any_call("Student ID is not an integer.")
 
     def test_negative_id_student(self):
         data = {
@@ -268,8 +272,11 @@ class TestStudentManagementSystem(unittest.TestCase):
             "department": "Computer Engineering",
             "marks": 90
         }
-        result = validate_student_data(data)
+        with patch("builtins.print") as mock_print:
+            result = validate_student_data(data)
+
         self.assertFalse(result)
+        mock_print.assert_any_call("Student ID is negative.")
 
     def test_wrong_data_type_name(self):
         data = {
@@ -279,8 +286,11 @@ class TestStudentManagementSystem(unittest.TestCase):
             "department": "Computer Engineering",
             "marks": 90
         }
-        result = validate_student_data(data)
+        with patch("builtins.print") as mock_print:
+            result = validate_student_data(data)
+
         self.assertFalse(result)
+        mock_print.assert_any_call("Student name is not a string.")
 
     def test_empty_name(self):
         data = {
@@ -290,8 +300,12 @@ class TestStudentManagementSystem(unittest.TestCase):
             "department": "Computer Engineering",
             "marks": 90
         }
-        result = validate_student_data(data)
+
+        with patch("builtins.print") as mock_print:
+            result = validate_student_data(data)
+
         self.assertFalse(result)
+        mock_print.assert_any_call("Student name can't be empty.")
 
     def test_invalid_name(self):
         data = {
@@ -301,8 +315,13 @@ class TestStudentManagementSystem(unittest.TestCase):
             "department": "Computer Engineering",
             "marks": 90
         }
-        result = validate_student_data(data)
+        with patch("builtins.print") as mock_print:
+            result = validate_student_data(data)
+
         self.assertFalse(result)
+        mock_print.assert_any_call(
+            "Student name doesn't contain only letters and spaces."
+        )
 
     def test_wrong_data_type_age(self):
         data = {
@@ -312,8 +331,12 @@ class TestStudentManagementSystem(unittest.TestCase):
             "department": "Computer Engineering",
             "marks": 90
         }
-        result = validate_student_data(data)
+
+        with patch("builtins.print") as mock_print:
+            result = validate_student_data(data)
+
         self.assertFalse(result)
+        mock_print.assert_any_call("Student age is not an integer.")
 
     def test_age_below_minimum_student(self):
         data = {
@@ -323,8 +346,13 @@ class TestStudentManagementSystem(unittest.TestCase):
             "department": "Computer Engineering",
             "marks": 90
         }
-        result = validate_student_data(data)
+        with patch("builtins.print") as mock_print:
+            result = validate_student_data(data)
+
         self.assertFalse(result)
+        mock_print.assert_any_call(
+            "Student age must be between 15 and 30."
+        )
 
     def test_age_above_maximum_student(self):
         data = {
@@ -334,8 +362,13 @@ class TestStudentManagementSystem(unittest.TestCase):
             "department": "Computer Engineering",
             "marks": 90
         }
-        result = validate_student_data(data)
+
+        with patch("builtins.print") as mock_print:
+            result = validate_student_data(data)
         self.assertFalse(result)
+        mock_print.assert_any_call(
+            "Student age must be between 15 and 30."
+        )
 
     def test_wrong_data_type_department(self):
         data = {
@@ -345,8 +378,14 @@ class TestStudentManagementSystem(unittest.TestCase):
             "department": 123,
             "marks": 90
         }
-        result = validate_student_data(data)
+
+        with patch("builtins.print") as mock_print:
+            result = validate_student_data(data)
+
         self.assertFalse(result)
+        mock_print.assert_any_call(
+            "Student department is not a string."
+        )
 
     def test_empty_department(self):
         data = {
@@ -356,8 +395,14 @@ class TestStudentManagementSystem(unittest.TestCase):
             "department": "",
             "marks": 90
         }
-        result = validate_student_data(data)
+
+        with patch("builtins.print") as mock_print:
+            result = validate_student_data(data)
+
         self.assertFalse(result)
+        mock_print.assert_any_call(
+            "Student department can't be empty."
+        )
 
     def test_invalid_department(self):
         data = {
@@ -367,8 +412,11 @@ class TestStudentManagementSystem(unittest.TestCase):
             "department": "Computer123",
             "marks": 90
         }
-        result = validate_student_data(data)
+
+        with patch("builtins.print") as mock_print:
+            result = validate_student_data(data)
         self.assertFalse(result)
+        mock_print.assert_any_call("Student department must contain only letters and spaces.")
 
     def test_wrong_data_type_marks(self):
         data = {
@@ -378,8 +426,11 @@ class TestStudentManagementSystem(unittest.TestCase):
             "department": "Computer Engineering",
             "marks": "90"
         }
-        result = validate_student_data(data)
+        with patch("builtins.print") as mock_print:
+            result = validate_student_data(data)
+
         self.assertFalse(result)
+        mock_print.assert_any_call("Student marks is not an integer")
 
     def test_marks_below_minimum_student(self):
         data = {
@@ -389,8 +440,12 @@ class TestStudentManagementSystem(unittest.TestCase):
             "department": "Computer Engineering",
             "marks": -1
         }
-        result = validate_student_data(data)
+
+        with patch("builtins.print") as mock_print:
+            result = validate_student_data(data)
+
         self.assertFalse(result)
+        mock_print.assert_any_call("Student marks are not between 0-100")
 
     def test_marks_above_maximum_student(self):
         data = {
@@ -400,8 +455,12 @@ class TestStudentManagementSystem(unittest.TestCase):
             "department": "Computer Engineering",
             "marks": 101
         }
-        result = validate_student_data(data)
+
+        with patch("builtins.print") as mock_print:
+            result = validate_student_data(data)
+
         self.assertFalse(result)
+        mock_print.assert_any_call("Student marks are not between 0-100")
 
     def test_valid_student_data(self):
         data = {
@@ -412,4 +471,55 @@ class TestStudentManagementSystem(unittest.TestCase):
             "marks": 90
         }
         result = validate_student_data(data)
+
+        self.assertTrue(result)
+
+    def test_validate_dict_non_dictionary(self):
+        with patch("builtins.print") as mock_print:
+            result = validate_dict("hello")
+
+        self.assertFalse(result)
+        mock_print.assert_any_call("Skipping this student.")
+
+    def test_validate_dict_missing_required_field(self):
+        data = {
+            "student_id": 1,
+            "name": "Minahil",
+            "age": 21,
+            "department": "Computer Engineering"
+        }
+
+        with patch("builtins.print") as mock_print:
+            result = validate_dict(data)
+
+        self.assertFalse(result)
+        mock_print.assert_any_call("Student data is missing a required field.")
+        mock_print.assert_any_call("Skipping this student.")
+
+    def test_validate_dict_invalid_student_data(self):
+        data = {
+            "student_id": 1,
+            "name": "Minahil123",
+            "age": 21,
+            "department": "Computer Engineering",
+            "marks": 90
+        }
+
+        with patch("builtins.print") as mock_print:
+            result = validate_dict(data)
+
+        self.assertFalse(result)
+        mock_print.assert_any_call("Skipping this student.")
+
+    def test_validate_dict_valid_student_data(self):
+        data = {
+            "student_id": 1,
+            "name": "Minahil",
+            "age": 21,
+            "department": "Computer Engineering",
+            "marks": 90
+        }
+
+        result = validate_dict(data)
+
         self.assertTrue(result)
