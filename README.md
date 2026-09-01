@@ -1,38 +1,18 @@
 # Student Management System
 
-A console-based Student Management System built in Python to practice software development principles and showcase programming skills.
+A console-based **Student Management System built with Python**, developed incrementally to practice programming, software design, Object-Oriented Programming, data persistence, testing, and Git/GitHub.
 
-## Project Description
+## Features
 
-This project is being developed incrementally to strengthen my understanding of Python programming, problem solving, software design, Object-Oriented Programming, file handling, error handling, Git, and GitHub.
-
-Each version introduces new concepts while improving the project's structure, reliability, and maintainability.
-
----
-
-## Current Features (Version 7)
-
-* Add a new student
-* View all students
-* Search for a student by ID
-* Update student information
-* Delete student
-* Input validation for all fields
-* Reusable helper functions
-* Object-Oriented Programming (OOP)
+* Add, view, search, update, and delete students
+* Input validation for student data
+* Object-Oriented Programming with `Student` and `StudentManagementSystem`
 * JSON-based data persistence
-* Automatically load student records when the program starts
-* Handle malformed JSON data
-* Handle missing required fields in stored JSON data
-* Validate data types and values in stored JSON records
-* Detect and skip duplicate student IDs in stored JSON data
-* Skip invalid student records instead of terminating the program
-* Refactored code structure to improve readability and maintainability
-* Reduced repetitive code using function mappings and reusable validation functions
-* Improved update logic using dynamic attribute access
-* Added rollback when saving updated data fails
-
----
+* Robust handling of invalid and malformed JSON data
+* Duplicate ID detection
+* Save-operation rollback on failure
+* Unit testing with Python's `unittest` framework
+* Comprehensive testing of validation, persistence, and CRUD operations
 
 ## Student Information
 
@@ -44,87 +24,44 @@ Each student record contains:
 * Department
 * Marks
 
----
+## Validation Rules
 
-## Rules
+* Student ID must be a non-negative, unique integer
+* Name and department cannot be empty
+* Name and department may contain only letters and spaces
+* Age must be between 15 and 30
+* Marks must be between 0 and 100
 
-* Every Student ID must be unique.
-* Student ID cannot be negative.
-* Name cannot be empty and must contain only letters and spaces.
-* Age must be between 15 and 30.
-* Department cannot be empty and must contain only letters and spaces.
-* Marks must be between 0 and 100.
-
----
-
-## Technologies Used
+## Technologies
 
 * Python 3
-* PyCharm IDE
-* Git
-* GitHub
+* `unittest`
 * JSON
-
----
+* Git & GitHub
+* PyCharm
 
 ## Project Roadmap
 
-### ✅ Version 1
+| Version | Focus                          | Status |
+| ------- | ------------------------------ | ------ |
+| 1       | Basic CRUD                     | ✅      |
+| 2       | Refactoring & validation       | ✅      |
+| 3       | JSON persistence               | ✅      |
+| 4       | Object-Oriented Programming    | ✅      |
+| 5       | OOP + JSON integration         | ✅      |
+| 6       | Robust JSON validation         | ✅      |
+| 7       | Refactoring & maintainability  | ✅      |
+| 8       | Testing & project organization | ✅      |
+| 9       | SQLite database integration    | 🔄     |
+| 10      | Application expansion          | ⏳      |
 
-* Basic CRUD operations
+## Future Plans
 
-### ✅ Version 2
-
-* Code refactoring
-* Reusable helper functions
-* Input validation
-* Cleaner and more maintainable code
-
-### ✅ Version 3
-
-* Save student records to a JSON file
-* Load student records automatically
-
-### ✅ Version 4
-
-* Convert the system to Object-Oriented Programming (OOP)
-* Introduce `Student` and `StudentManagementSystem` classes
-
-### ✅ Version 5
-
-* Integrate JSON persistence with the OOP structure
-* Convert Student objects to dictionaries for JSON storage
-* Reconstruct Student objects when loading data
-* Handle missing required fields in JSON data
-
-### ✅ Version 6
-
-* Handle malformed JSON records
-* Validate JSON data types and values
-* Detect duplicate student IDs
-* Skip invalid student records safely
-* Improve reliability when loading stored data
-
-### ✅ Version 7 (Current)
-
-* Refactor code structure
-* Reduce unnecessary repetition
-* Improve maintainability and readability
-* Simplify validation and update logic
-* Improve save-operation handling with rollback
-
-### 🔄 Version 8 (Next)
-
-* Add more comprehensive testing
-* Improve project organization
-* Strengthen error handling
-* Prepare the system for database integration
+* SQLite database
+* Flask web application
+* GUI
+* User authentication and authorization
 
 ---
 
-## Future Improvements
-
-* SQLite database
-* Graphical User Interface (GUI)
-* Web version using Flask
-* User authentication and authorization
+**Built as a learning project to develop practical Python and software engineering skills.**
