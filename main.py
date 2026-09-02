@@ -11,7 +11,7 @@ def display_menu():
     print("6. Exit")
 
 
-class StudentManagementSystem():
+class StudentManagementSystem:
     def __init__(self, students=None):
         if students is None:
             students = []
@@ -144,24 +144,24 @@ class StudentManagementSystem():
         ids = set()
         for student_data in data:
             try:
-                required = {"id","name", "age", "department","marks"}
+                required = {"student_id","name", "age", "department","marks"}
                 if not isinstance(student_data,dict):
                     print("Skipping this student.")
                     continue
-                is_valid = student_data.keys() >= required
-                if not is_valid:
+                has_required_fields = student_data.keys() >= required
+                if not has_required_fields:
                     raise KeyError
-                in_valid = validating_json(student_data)
-                if not in_valid:
+                is_json_valid = validating_json(student_data)
+                if not is_json_valid:
                     print("Skipping this student.")
                     continue
-                student_id = student_data["id"]
+                student_id = student_data["student_id"]
                 if student_id in ids:
                     print(f"Duplicate student ID {student_id}.")
                     print("Skipping this student.")
                     continue
                 s = Student(
-                    student_data["id"],
+                    student_data["student_id"],
                     student_data["name"],
                     student_data["age"],
                     student_data["department"],
@@ -176,9 +176,9 @@ class StudentManagementSystem():
                 continue
 
 
-class Student():
-    def __init__(self, id, name, age, department, marks):
-        self.id = id
+class Student:
+    def __init__(self, student_id, name, age, department, marks):
+        self.id = student_id
         self.name = name
         self.age = age
         self.department = department
@@ -195,7 +195,7 @@ class Student():
 
     def to_dict(self):
         std_dict = {
-            "id": self.id,
+            "student_id": self.id,
             "name": self.name,
             "age": self.age,
             "department": self.department,
@@ -274,17 +274,13 @@ def get_valid_id(message):
 
 def validating_json(student_data):
     for key, value in student_data.items():
-        if key == "id":
-            try:
-                if not isinstance(value, int) or isinstance(value, bool):
-                    print("Wrong data type")
-                    return False
-                student_id_valid = value
-                if student_id_valid < 0:
-                    print("Student ID is negative.")
-                    return False
-            except ValueError:
-                print("Error occurred in ID")
+        if key == "student_id":
+            if not isinstance(value, int) or isinstance(value, bool):
+                print("Wrong data type")
+                return False
+            student_id_valid = value
+            if student_id_valid < 0:
+                print("Student ID is negative.")
                 return False
 
         elif key == "name":
@@ -301,17 +297,13 @@ def validating_json(student_data):
                 print("Student name doesn't follow require rules.")
                 return False
         elif key == "age":
-            try:
-                if not isinstance(value, int) or isinstance(value, bool):
-                    print("Wrong data type.")
-                    return False
-                if value < 0:
-                    print("The student's age is negative")
-                    return False
-                elif value < 15 or value > 30:
-                    print("Student's age doesn't follow required rules")
-                    return False
-            except ValueError:
+            if not isinstance(value, int) or isinstance(value, bool):
+                print("Wrong data type.")
+                return False
+            if value < 0:
+                print("The student's age is negative")
+                return False
+            elif value < 15 or value > 30:
                 print("Student's age doesn't follow required rules")
                 return False
         elif key == "department":
@@ -328,14 +320,10 @@ def validating_json(student_data):
                 return False
 
         elif key == "marks":
-            try:
-                if not isinstance(value, int) or isinstance(value, bool):
-                    print("Wrong data type.")
-                    return False
-                if not 0 <= value <= 100:
-                    print("Student's marks don't follow required rules")
-                    return False
-            except ValueError:
+            if not isinstance(value, int) or isinstance(value, bool):
+                print("Wrong data type.")
+                return False
+            if not 0 <= value <= 100:
                 print("Student's marks don't follow required rules")
                 return False
     return True

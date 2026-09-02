@@ -1,27 +1,27 @@
 [
     {
-        "id": 1,
-        "name": "Alisha Furqan",
+        "student_id": 1,
+        "name": "Ayesha",
         "age": 22,
         "department": "Computer Engineering",
         "marks": 66
     },
     {
-        "id": 2,
-        "name": "Mumtaz Danish",
+        "student_id": 2,
+        "name": "Mumtaz Ahsan",
         "age": 18,
         "department": "Computer Science",
         "marks": 23
     },
     {
-        "id": 3,
+        "student_id": 3,
         "name": "Maliha Noor",
         "age": 23,
         "department": "Artificial Intelligence",
         "marks": 99
     },
     {
-        "id": 4,
+        "student_id": 4,
         "name": "Mina Ashraf",
         "age": 23,
         "department": "Computer Engineering",
