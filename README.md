@@ -6,11 +6,11 @@ A console-based Student Management System built in Python to practice software d
 
 This project is being developed incrementally to strengthen my understanding of Python programming, problem solving, software design, Object-Oriented Programming, file handling, error handling, Git, and GitHub.
 
-Each version introduces new concepts while improving the project's structure and maintainability.
+Each version introduces new concepts while improving the project's structure, reliability, and maintainability.
 
 ---
 
-## Current Features (Version 5)
+## Current Features (Version 6)
 
 * Add a new student
 * View all students
@@ -22,7 +22,11 @@ Each version introduces new concepts while improving the project's structure and
 * Object-Oriented Programming (OOP)
 * JSON-based data persistence
 * Automatically load student records when the program starts
+* Handle malformed JSON data
 * Handle missing required fields in stored JSON data
+* Validate data types and values in stored JSON records
+* Detect and skip duplicate student IDs in stored JSON data
+* Skip invalid student records instead of terminating the program
 
 ---
 
@@ -82,19 +86,28 @@ Each student record contains:
 * Convert the system to Object-Oriented Programming (OOP)
 * Introduce `Student` and `StudentManagementSystem` classes
 
-### ✅ Version 5 (Current)
+### ✅ Version 5
 
 * Integrate JSON persistence with the OOP structure
 * Convert Student objects to dictionaries for JSON storage
 * Reconstruct Student objects when loading data
 * Handle missing required fields in JSON data
 
-### 🔄 Version 6 (Next)
+### ✅ Version 6 (Current)
+
+* Handle malformed JSON records
+* Validate JSON data types and values
+* Detect duplicate student IDs
+* Skip invalid student records safely
+* Improve reliability when loading stored data
+
+### 🔄 Version 7 (Next)
 
 * Refactor and improve code structure
 * Improve error handling
-* Reduce repetition
+* Reduce unnecessary repetition
 * Improve overall maintainability
+* Add more comprehensive testing
 
 ---
 
