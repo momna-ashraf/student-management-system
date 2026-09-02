@@ -19,5 +19,12 @@
         "age": 23,
         "department": "Artificial Intelligence",
         "marks": 99
+    },
+    {
+        "id": 4,
+        "name": "Mina Ashraf",
+        "age": 23,
+        "department": "Computer Engineering",
+        "marks": 90
     }
 ]

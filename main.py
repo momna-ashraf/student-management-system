@@ -137,7 +137,7 @@ class StudentManagementSystem():
         except FileNotFoundError:
             self.students = []
         except json.JSONDecodeError:
-            print("Their seems to be an error with students data\nKindly handle it.")
+            print("There seems to be an error with students data\nKindly handle it.")
             return True
 
     def convert_students(self, data):
@@ -276,7 +276,10 @@ def validating_json(student_data):
     for key, value in student_data.items():
         if key == "id":
             try:
-                student_id_valid = int(value)
+                if not isinstance(value, int) or isinstance(value, bool):
+                    print("Wrong data type")
+                    return False
+                student_id_valid = value
                 if student_id_valid < 0:
                     print("Student ID is negative.")
                     return False
@@ -285,6 +288,9 @@ def validating_json(student_data):
                 return False
 
         elif key == "name":
+            if not isinstance(value, str):
+                print("Wrong data type")
+                return False
             name = value.strip()
 
             if name == "":
@@ -296,17 +302,22 @@ def validating_json(student_data):
                 return False
         elif key == "age":
             try:
-                age = int(value)
-                if age < 0:
+                if not isinstance(value, int) or isinstance(value, bool):
+                    print("Wrong data type.")
+                    return False
+                if value < 0:
                     print("The student's age is negative")
                     return False
-                elif age < 15 or age > 30:
+                elif value < 15 or value > 30:
                     print("Student's age doesn't follow required rules")
                     return False
             except ValueError:
                 print("Student's age doesn't follow required rules")
                 return False
         elif key == "department":
+            if not isinstance(value, str):
+                print("Wrong data type")
+                return False
             department = value.strip()
             if department == "":
                 print("The Student's department is empty")
@@ -318,8 +329,10 @@ def validating_json(student_data):
 
         elif key == "marks":
             try:
-                marks = int(value)
-                if not 0 <= marks <= 100:
+                if not isinstance(value, int) or isinstance(value, bool):
+                    print("Wrong data type.")
+                    return False
+                if not 0 <= value <= 100:
                     print("Student's marks don't follow required rules")
                     return False
             except ValueError:
