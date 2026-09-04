@@ -36,8 +36,11 @@ class StudentManagementSystem:
 
         student = Student(student_id, student_name, student_age, department_name, student_marks)
         self.students.append(student)
-        self.save_students()
-        print("Student added successfully!\n")
+        if not self.save_students():
+            print("Could not save student data.")
+            self.students.remove(student)
+        else:
+            print("Student added successfully!\n")
 
     def view_students(self):
         print("\n======= View Students ========")
@@ -78,18 +81,32 @@ class StudentManagementSystem:
                 "What do you want to update (name, age, department, marks): "
             ).lower().strip()
             if to_update == "name":
+                old_value = student.name
                 student.name = get_valid_name(f"Enter Student's new {to_update}: ")
             elif to_update == "age":
+                old_value = student.age
                 student.age = get_valid_age(f"Enter student's new {to_update}: ")
             elif to_update == "department":
+                old_value = student.department
                 student.department = get_valid_department(f"Enter student's new {to_update}: ")
             elif to_update == "marks":
+                old_value = student.marks
                 student.marks = get_valid_marks(f"Enter student's new {to_update}: ")
             else:
                 print("Please enter a valid choice.")
                 continue
-            self.save_students()
-            print("Updated successfully!")
+            if not self.save_students():
+                print("Could not update student data.")
+                if to_update == "name":
+                    student.name = old_value
+                elif to_update == "age":
+                    student.age = old_value
+                elif to_update == "department":
+                    student.department = old_value
+                elif to_update == "marks":
+                    student.marks = old_value
+            else:
+                print("Updated successfully!\n")
             break
 
     def delete_student(self):
@@ -101,8 +118,11 @@ class StudentManagementSystem:
         if student:
             student.display_student()
             self.students.remove(student)
-            self.save_students()
-            print("Student deleted successfully!")
+            if not self.save_students():
+                print("Could not delete student data.")
+                self.students.append(student)
+            else:
+                print("Student deleted successfully!")
         else:
             print("Student not found.")
 
@@ -113,11 +133,13 @@ class StudentManagementSystem:
         return None
 
     def save_students(self):
-        student_data = []
-        for student in self.students:
-            student_data.append(student.to_dict())
-        with open("students.json", "w") as file:
-            json.dump(student_data, file, indent=4)
+        student_data = [student.to_dict() for student in self.students]
+        try:
+            with open("students.json", "w") as file:
+                json.dump(student_data, file, indent=4)
+            return True
+        except OSError:
+            return False
 
     def load_students(self):
         try:
@@ -125,20 +147,21 @@ class StudentManagementSystem:
                 content = file.read()
                 if content.strip() == "":
                     self.students = []
-                    return
+                    return True
                 data = json.loads(content)
                 if not isinstance(data, list):
                     print("Loading data failed because the JSON data must be a list.")
-                    return True
+                    return False
                 self.students = []
                 self.convert_students(data)
-
+                return True
 
         except FileNotFoundError:
             self.students = []
+            return True
         except json.JSONDecodeError:
             print("There seems to be an error with students data\nKindly handle it.")
-            return True
+            return False
 
     def convert_students(self, data):
         student_ids = set()
@@ -331,7 +354,7 @@ def validate_dict(student_data):
 
 
 def main():
-    if system.load_students():
+    if not system.load_students():
         return
     while True:
         display_menu()
