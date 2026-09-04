@@ -74,17 +74,17 @@ class StudentManagementSystem:
         student.display_student()
 
         while True:
-            x = input(
-                "What you wanna update (name, age, department, marks): "
+            to_update = input(
+                "What do you want to update (name, age, department, marks): "
             ).lower().strip()
-            if x == "name":
-                student.name = get_valid_name("Enter Student's new name: ")
-            elif x == "age":
-                student.age = get_valid_age("Enter student's new age: ")
-            elif x == "department":
-                student.department = get_valid_department("Enter student's new department: ")
-            elif x == "marks":
-                student.marks = get_valid_marks("Enter student's new marks: ")
+            if to_update == "name":
+                student.name = get_valid_name(f"Enter Student's new {to_update}: ")
+            elif to_update == "age":
+                student.age = get_valid_age(f"Enter student's new {to_update}: ")
+            elif to_update == "department":
+                student.department = get_valid_department(f"Enter student's new {to_update}: ")
+            elif to_update == "marks":
+                student.marks = get_valid_marks(f"Enter student's new {to_update}: ")
             else:
                 print("Please enter a valid choice.")
                 continue
@@ -122,13 +122,13 @@ class StudentManagementSystem:
     def load_students(self):
         try:
             with open("students.json", "r") as file:
-                if file.read().strip() == "":
+                content = file.read()
+                if content.strip() == "":
                     self.students = []
                     return
-                file.seek(0)
-                data = json.load(file)
+                data = json.loads(content)
                 if not isinstance(data, list):
-                    print("Loading data failed.")
+                    print("Loading data failed because the JSON data must be a list.")
                     return True
                 self.students = []
                 self.convert_students(data)
@@ -141,39 +141,26 @@ class StudentManagementSystem:
             return True
 
     def convert_students(self, data):
-        ids = set()
+        student_ids = set()
         for student_data in data:
-            try:
-                required = {"student_id","name", "age", "department","marks"}
-                if not isinstance(student_data,dict):
-                    print("Skipping this student.")
-                    continue
-                has_required_fields = student_data.keys() >= required
-                if not has_required_fields:
-                    raise KeyError
-                is_json_valid = validating_json(student_data)
-                if not is_json_valid:
-                    print("Skipping this student.")
-                    continue
-                student_id = student_data["student_id"]
-                if student_id in ids:
-                    print(f"Duplicate student ID {student_id}.")
-                    print("Skipping this student.")
-                    continue
-                s = Student(
-                    student_data["student_id"],
-                    student_data["name"],
-                    student_data["age"],
-                    student_data["department"],
-                    student_data["marks"]
-                )
-
-                self.students.append(s)
-                ids.add(student_id)
-            except KeyError:
-                print("Student data is missing a required field.")
+            is_dict_valid = validate_dict(student_data)
+            if not is_dict_valid:
+                continue
+            student_id = student_data["student_id"]
+            if student_id in student_ids:
+                print(f"Duplicate student ID {student_id}.")
                 print("Skipping this student.")
                 continue
+            student = Student(
+                student_data["student_id"],
+                student_data["name"],
+                student_data["age"],
+                student_data["department"],
+                student_data["marks"]
+            )
+
+            self.students.append(student)
+            student_ids.add(student_id)
 
 
 class Student:
@@ -272,60 +259,74 @@ def get_valid_id(message):
             print("Please enter a valid integer for the Student ID.")
 
 
-def validating_json(student_data):
+def validate_student_data(student_data):
     for key, value in student_data.items():
         if key == "student_id":
             if not isinstance(value, int) or isinstance(value, bool):
-                print("Wrong data type")
+                print("Student ID is not an integer.")
                 return False
-            student_id_valid = value
-            if student_id_valid < 0:
+            if value < 0:
                 print("Student ID is negative.")
                 return False
 
         elif key == "name":
             if not isinstance(value, str):
-                print("Wrong data type")
+                print("Student name is not a string.")
                 return False
             name = value.strip()
 
             if name == "":
-                print("Student name is empty")
+                print("Student name can't be empty.")
                 return False
 
             if not name.replace(" ", "").isalpha():
-                print("Student name doesn't follow require rules.")
+                print("Student name doesn't contain only letters and spaces.")
                 return False
         elif key == "age":
             if not isinstance(value, int) or isinstance(value, bool):
-                print("Wrong data type.")
-                return False
-            if value < 0:
-                print("The student's age is negative")
+                print("Student age is not an integer.")
                 return False
             elif value < 15 or value > 30:
-                print("Student's age doesn't follow required rules")
+                print("Student age must be between 15 and 30.")
                 return False
         elif key == "department":
             if not isinstance(value, str):
-                print("Wrong data type")
+                print("Student department is not a string.")
                 return False
             department = value.strip()
             if department == "":
-                print("The Student's department is empty")
+                print("Student department can't be empty.")
                 return False
 
             if not department.replace(" ", "").isalpha():
-                print("The student's department doesn't follow required rules")
+                print("Student department must contain only letters and spaces.")
                 return False
 
         elif key == "marks":
             if not isinstance(value, int) or isinstance(value, bool):
-                print("Wrong data type.")
+                print("Student marks is not an integer")
                 return False
             if not 0 <= value <= 100:
-                print("Student's marks don't follow required rules")
+                print("Student marks are not between 0-100")
                 return False
+    return True
+
+
+def validate_dict(student_data):
+    skip_message = "Skipping this student."
+    required = {"student_id", "name", "age", "department", "marks"}
+    if not isinstance(student_data, dict):
+        print(skip_message)
+        return False
+    has_required_fields = student_data.keys() >= required
+    if not has_required_fields:
+        print("Student data is missing a required field.")
+        print(skip_message)
+        return False
+    is_student_valid = validate_student_data(student_data)
+    if not is_student_valid:
+        print(skip_message)
+        return False
     return True
 
 
