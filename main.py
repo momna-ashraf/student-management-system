@@ -343,6 +343,14 @@ def validate_dict(student_data):
 def main():
     if not system.load_students():
         return
+    menu_actions = {
+        1: system.add_student,
+        2: system.view_students,
+        3: system.search_student,
+        4: system.update_student,
+        5: system.delete_student,
+
+    }
     while True:
         display_menu()
         try:
@@ -351,20 +359,8 @@ def main():
             print("Please enter a valid number.")
             continue
 
-        if choice == 1:
-            system.add_student()
-
-        elif choice == 2:
-            system.view_students()
-
-        elif choice == 3:
-            system.search_student()
-
-        elif choice == 4:
-            system.update_student()
-
-        elif choice == 5:
-            system.delete_student()
+        if choice in menu_actions:
+            menu_actions[choice]()
 
         elif choice == 6:
             print("Thank you for using Student Management System")
