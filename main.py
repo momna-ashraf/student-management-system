@@ -48,12 +48,10 @@ class StudentManagementSystem:
             print("No students found.")
             return
 
-        num = 1
         print("\n====== Students list ========")
-        for student in self.students:
+        for num, student in enumerate(self.students, start=1):
             print(f"\nStudent {num}")
             student.display_student()
-            num += 1
 
     def search_student(self):
         print("\n======= Search Student ========")
@@ -75,36 +73,26 @@ class StudentManagementSystem:
             return
 
         student.display_student()
-
+        validators = {
+            "name": get_valid_name,
+            "age": get_valid_age,
+            "department": get_valid_department,
+            "marks": get_valid_marks
+        }
         while True:
             to_update = input(
                 "What do you want to update (name, age, department, marks): "
             ).lower().strip()
-            if to_update == "name":
-                old_value = student.name
-                student.name = get_valid_name(f"Enter Student's new {to_update}: ")
-            elif to_update == "age":
-                old_value = student.age
-                student.age = get_valid_age(f"Enter student's new {to_update}: ")
-            elif to_update == "department":
-                old_value = student.department
-                student.department = get_valid_department(f"Enter student's new {to_update}: ")
-            elif to_update == "marks":
-                old_value = student.marks
-                student.marks = get_valid_marks(f"Enter student's new {to_update}: ")
-            else:
+            if to_update not in validators:
                 print("Please enter a valid choice.")
                 continue
+            old_value = getattr(student, to_update)
+            new_value = validators[to_update](f"Enter student's new {to_update}: ")
+            setattr(student, to_update, new_value)
+
             if not self.save_students():
                 print("Could not update student data.")
-                if to_update == "name":
-                    student.name = old_value
-                elif to_update == "age":
-                    student.age = old_value
-                elif to_update == "department":
-                    student.department = old_value
-                elif to_update == "marks":
-                    student.marks = old_value
+                setattr(student, to_update, old_value)
             else:
                 print("Updated successfully!\n")
             break
@@ -204,14 +192,13 @@ class Student:
         print("--------------------------")
 
     def to_dict(self):
-        std_dict = {
+        return {
             "student_id": self.id,
             "name": self.name,
             "age": self.age,
             "department": self.department,
             "marks": self.marks
         }
-        return std_dict
 
 
 def get_valid_name(message):
