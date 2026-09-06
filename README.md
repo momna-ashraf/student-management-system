@@ -10,7 +10,7 @@ Each version introduces new concepts while improving the project's structure, re
 
 ---
 
-## Current Features (Version 6)
+## Current Features (Version 7)
 
 * Add a new student
 * View all students
@@ -27,6 +27,10 @@ Each version introduces new concepts while improving the project's structure, re
 * Validate data types and values in stored JSON records
 * Detect and skip duplicate student IDs in stored JSON data
 * Skip invalid student records instead of terminating the program
+* Refactored code structure to improve readability and maintainability
+* Reduced repetitive code using function mappings and reusable validation functions
+* Improved update logic using dynamic attribute access
+* Added rollback when saving updated data fails
 
 ---
 
@@ -93,7 +97,7 @@ Each student record contains:
 * Reconstruct Student objects when loading data
 * Handle missing required fields in JSON data
 
-### ✅ Version 6 (Current)
+### ✅ Version 6
 
 * Handle malformed JSON records
 * Validate JSON data types and values
@@ -101,13 +105,20 @@ Each student record contains:
 * Skip invalid student records safely
 * Improve reliability when loading stored data
 
-### 🔄 Version 7 (Next)
+### ✅ Version 7 (Current)
 
-* Refactor and improve code structure
-* Improve error handling
+* Refactor code structure
 * Reduce unnecessary repetition
-* Improve overall maintainability
+* Improve maintainability and readability
+* Simplify validation and update logic
+* Improve save-operation handling with rollback
+
+### 🔄 Version 8 (Next)
+
 * Add more comprehensive testing
+* Improve project organization
+* Strengthen error handling
+* Prepare the system for database integration
 
 ---
 
