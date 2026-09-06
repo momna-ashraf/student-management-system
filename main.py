@@ -205,10 +205,7 @@ def get_valid_age(message):
     while True:
         try:
             age = int(input(message))
-            if age < 0:
-                print("Age can't be negative")
-                continue
-            elif age < 15 or age > 30:
+            if age < 15 or age > 30:
                 print("Age must be between 15 and 30")
                 continue
             return age
@@ -225,8 +222,8 @@ def get_valid_text(message, field_name):
 
         if value.replace(" ", "").isalpha():
             return value.title()
-        else:
-            print(f"{field_name} should contain only letters and spaces.")
+
+        print(f"{field_name} should contain only letters and spaces.")
 
 
 def get_valid_marks(message):
@@ -235,8 +232,7 @@ def get_valid_marks(message):
             marks = int(input(message))
             if 0 <= marks <= 100:
                 return marks
-            else:
-                print("Marks must be between 0 to 100")
+            print("Marks must be between 0 to 100")
         except ValueError:
             print("Please enter a valid integer for the marks.")
 
@@ -281,7 +277,7 @@ def validate_student_data(student_data):
             if not isinstance(value, int) or isinstance(value, bool):
                 print("Student age is not an integer.")
                 return False
-            elif value < 15 or value > 30:
+            if value < 15 or value > 30:
                 print("Student age must be between 15 and 30.")
                 return False
         elif key == "department":
@@ -308,19 +304,17 @@ def validate_student_data(student_data):
 
 
 def validate_dict(student_data):
-    skip_message = "Skipping this student."
     required = {"student_id", "name", "age", "department", "marks"}
     if not isinstance(student_data, dict):
-        print(skip_message)
+        print("Skipping this student.")
         return False
     has_required_fields = student_data.keys() >= required
     if not has_required_fields:
         print("Student data is missing a required field.")
-        print(skip_message)
+        print("Skipping this student.")
         return False
-    is_student_valid = validate_student_data(student_data)
-    if not is_student_valid:
-        print(skip_message)
+    if not validate_student_data(student_data):
+        print("Skipping this student.")
         return False
     return True
 
@@ -350,6 +344,7 @@ def main():
         elif choice == 6:
             print("Thank you for using Student Management System")
             break
+
         else:
             print("Invalid choice. Please try again.")
 
