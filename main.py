@@ -26,11 +26,11 @@ class StudentManagementSystem:
                 continue
             break
 
-        student_name = get_valid_name("Enter student name: ")
+        student_name = get_valid_text("Enter student name: ", "Name")
 
         student_age = get_valid_age("Enter student age: ")
 
-        department_name = get_valid_department("Enter student department: ")
+        department_name = get_valid_text("Enter student department: ", "Department")
 
         student_marks = get_valid_marks("Enter student marks: ")
 
@@ -74,9 +74,9 @@ class StudentManagementSystem:
 
         student.display_student()
         validators = {
-            "name": get_valid_name,
+            "name": lambda message: get_valid_text(message, "Name"),
             "age": get_valid_age,
-            "department": get_valid_department,
+            "department": lambda message: get_valid_text(message, "Department"),
             "marks": get_valid_marks
         }
         while True:
@@ -201,20 +201,6 @@ class Student:
         }
 
 
-def get_valid_name(message):
-    while True:
-        name = input(message).strip()
-
-        if name == "":
-            print("Name can't be empty")
-            continue
-
-        if name.replace(" ", "").isalpha():
-            return name.title()
-        else:
-            print("Name should contain only letters and spaces.")
-
-
 def get_valid_age(message):
     while True:
         try:
@@ -230,18 +216,17 @@ def get_valid_age(message):
             print("Age must be a number")
 
 
-def get_valid_department(message):
+def get_valid_text(message, field_name):
     while True:
-        department = input(message).strip()
-
-        if department == "":
-            print("Department name can't be empty")
+        value = input(message).strip()
+        if value == "":
+            print(f"{field_name} can't be empty")
             continue
 
-        if department.replace(" ", "").isalpha():
-            return department.title()
+        if value.replace(" ", "").isalpha():
+            return value.title()
         else:
-            print("Department name should contain only letters and spaces.")
+            print(f"{field_name} should contain only letters and spaces.")
 
 
 def get_valid_marks(message):
@@ -259,12 +244,12 @@ def get_valid_marks(message):
 def get_valid_id(message):
     while True:
         try:
-            student_id_valid = int(input(message))
-            if student_id_valid < 0:
+            student_id = int(input(message))
+            if student_id < 0:
                 print("Student ID cannot be negative.")
                 continue
 
-            return student_id_valid
+            return student_id
         except ValueError:
             print("Please enter a valid integer for the Student ID.")
 
