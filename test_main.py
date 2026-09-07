@@ -117,11 +117,30 @@ class TestStudentManagementSystem(unittest.TestCase):
         })
 
     def test_display_students(self):
-        student = Student(1, "Momna", 20, "Computer Engineering", 90)
+        student = Student(1, "Minahil", 20, "Computer Engineering", 90)
         with patch("builtins.print") as mock_print:
             student.display_student()
-        mock_print.assert_any_call("Student Name: Momna")
+        mock_print.assert_any_call("Student Name: Minahil")
         mock_print.assert_any_call("ID: 1")
         mock_print.assert_any_call("Age: 20")
         mock_print.assert_any_call("Department: Computer Engineering")
         mock_print.assert_any_call("Marks: 90")
+
+    def test_system_initialization(self):
+        system = StudentManagementSystem()
+        result = system.students
+        self.assertEqual(result, [])
+
+    def test_system_initialization_students(self):
+        student = Student(1, "Minahil", 21, "Computer Science", 90)
+        system = StudentManagementSystem([student])
+        result = system.students
+        self.assertEqual(result, [student])
+
+    def test_load_students_file_not_found(self):
+        system = StudentManagementSystem()
+        with patch("builtins.open") as mock_open:
+            mock_open.side_effect = FileNotFoundError
+            result = system.load_students()
+        self.assertTrue(result)
+        self.assertEqual(system.students, [])
