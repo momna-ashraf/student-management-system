@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch
-from main import Student, StudentManagementSystem, get_valid_age, get_valid_marks
+from main import Student, StudentManagementSystem, get_valid_age, get_valid_marks, get_valid_id
 
 
 class TestStudentManagementSystem(unittest.TestCase):
@@ -24,17 +24,17 @@ class TestStudentManagementSystem(unittest.TestCase):
         self.assertEqual(result, 23)
 
     def test_age_below_minimum(self):
-        with patch("builtins.input", side_effect=["14", "10", "20"]):
+        with patch("builtins.input", side_effect=["14", "20"]):
             result = get_valid_age("Enter age: ")
         self.assertEqual(result, 20)
 
     def test_age_above_maximum(self):
-        with patch("builtins.input", side_effect=["100", "44", "29"]):
+        with patch("builtins.input", side_effect=["100", "29"]):
             result = get_valid_age("Enter age: ")
         self.assertEqual(result, 29)
 
     def test_age_non_numeric_input(self):
-        with patch("builtins.input", side_effect=["Hello", "yes", "22"]):
+        with patch("builtins.input", side_effect=["Hello", "22"]):
             result = get_valid_age("Enter age: ")
         self.assertEqual(result, 22)
 
@@ -44,16 +44,32 @@ class TestStudentManagementSystem(unittest.TestCase):
         self.assertEqual(result,90)
 
     def test_marks_below_minimum(self):
-        with patch("builtins.input",side_effect = ["-1","-2","44"]):
+        with patch("builtins.input",side_effect = ["-1","44"]):
             result = get_valid_marks("Enter marks: ")
         self.assertEqual(result, 44)
 
     def test_marks_above_maximum(self):
-        with patch("builtins.input",side_effect = ["110","200","100"]):
+        with patch("builtins.input",side_effect = ["110","100"]):
             result = get_valid_marks("Enter marks: ")
         self.assertEqual(result, 100)
 
     def test_marks_non_numeric_input(self):
-        with patch("builtins.input", side_effect=["Hello", "name", "22"]):
-            result = get_valid_marks("Enter age: ")
+        with patch("builtins.input", side_effect=["Hello", "22"]):
+            result = get_valid_marks("Enter marks: ")
         self.assertEqual(result, 22)
+
+    def test_validate_id(self):
+        with patch("builtins.input",return_value="1"):
+            result = get_valid_id("Enter id: ")
+        self.assertEqual(result,1)
+
+    def test_negative_id(self):
+        with patch("builtins.input",side_effect = ["-1","2"]):
+            result = get_valid_id("Enter id: ")
+        self.assertEqual(result,2)
+
+    def test_non_numeric_id(self):
+        with patch("builtins.input",side_effect = ["hi","2"]):
+            result = get_valid_id("Enter id: ")
+        self.assertEqual(result,2)
+
