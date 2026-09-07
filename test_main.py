@@ -99,6 +99,29 @@ class TestStudentManagementSystem(unittest.TestCase):
         self.assertEqual(result, "Computer")
 
     def test_text_non_alphabetic_input(self):
-        with patch("builtins.input", side_effect=["#", "12","Computer"]):
+        with patch("builtins.input", side_effect=["#", "12", "Computer"]):
             result = get_valid_text("Enter text: ", "Department")
         self.assertEqual(result, "Computer")
+
+    def test_student_to_dict(self):
+        student = Student(1, "Minahil", 21, "Computer Science", 90)
+
+        result = student.to_dict()
+
+        self.assertEqual(result, {
+            "student_id": 1,
+            "name": "Minahil",
+            "age": 21,
+            "department": "Computer Science",
+            "marks": 90
+        })
+
+    def test_display_students(self):
+        student = Student(1, "Momna", 20, "Computer Engineering", 90)
+        with patch("builtins.print") as mock_print:
+            student.display_student()
+        mock_print.assert_any_call("Student Name: Momna")
+        mock_print.assert_any_call("ID: 1")
+        mock_print.assert_any_call("Age: 20")
+        mock_print.assert_any_call("Department: Computer Engineering")
+        mock_print.assert_any_call("Marks: 90")
