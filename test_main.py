@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch
-from main import Student, StudentManagementSystem, get_valid_age, get_valid_marks, get_valid_id
+from main import Student, StudentManagementSystem, get_valid_age, get_valid_marks, get_valid_id, get_valid_text
 
 
 class TestStudentManagementSystem(unittest.TestCase):
@@ -38,18 +38,23 @@ class TestStudentManagementSystem(unittest.TestCase):
             result = get_valid_age("Enter age: ")
         self.assertEqual(result, 22)
 
+    def test_age_empty_input(self):
+        with patch("builtins.input", side_effect=["", "23"]):
+            result = get_valid_age("Enter age: ")
+        self.assertEqual(result, 23)
+
     def test_validate_marks(self):
-        with patch("builtins.input",return_value = "90"):
+        with patch("builtins.input", return_value="90"):
             result = get_valid_marks("Enter marks: ")
-        self.assertEqual(result,90)
+        self.assertEqual(result, 90)
 
     def test_marks_below_minimum(self):
-        with patch("builtins.input",side_effect = ["-1","44"]):
+        with patch("builtins.input", side_effect=["-1", "44"]):
             result = get_valid_marks("Enter marks: ")
         self.assertEqual(result, 44)
 
     def test_marks_above_maximum(self):
-        with patch("builtins.input",side_effect = ["110","100"]):
+        with patch("builtins.input", side_effect=["110", "100"]):
             result = get_valid_marks("Enter marks: ")
         self.assertEqual(result, 100)
 
@@ -58,18 +63,42 @@ class TestStudentManagementSystem(unittest.TestCase):
             result = get_valid_marks("Enter marks: ")
         self.assertEqual(result, 22)
 
+    def test_marks_empty_input(self):
+        with patch("builtins.input", side_effect=["", "44"]):
+            result = get_valid_marks("Enter marks: ")
+        self.assertEqual(result, 44)
+
     def test_validate_id(self):
-        with patch("builtins.input",return_value="1"):
+        with patch("builtins.input", return_value="1"):
             result = get_valid_id("Enter id: ")
-        self.assertEqual(result,1)
+        self.assertEqual(result, 1)
 
     def test_negative_id(self):
-        with patch("builtins.input",side_effect = ["-1","2"]):
+        with patch("builtins.input", side_effect=["-1", "2"]):
             result = get_valid_id("Enter id: ")
-        self.assertEqual(result,2)
+        self.assertEqual(result, 2)
 
     def test_non_numeric_id(self):
-        with patch("builtins.input",side_effect = ["hi","2"]):
+        with patch("builtins.input", side_effect=["hi", "2"]):
             result = get_valid_id("Enter id: ")
-        self.assertEqual(result,2)
+        self.assertEqual(result, 2)
 
+    def test_id_empty_input(self):
+        with patch("builtins.input", side_effect=["", "23"]):
+            result = get_valid_id("Enter id: ")
+        self.assertEqual(result, 23)
+
+    def test_valid_text_input(self):
+        with patch("builtins.input", return_value="Computer"):
+            result = get_valid_text("Enter text: ", "Department")
+        self.assertEqual(result, "Computer")
+
+    def test_text_empty_input(self):
+        with patch("builtins.input", side_effect=["", "Computer"]):
+            result = get_valid_text("Enter text: ", "Department")
+        self.assertEqual(result, "Computer")
+
+    def test_text_non_alphabetic_input(self):
+        with patch("builtins.input", side_effect=["#", "12","Computer"]):
+            result = get_valid_text("Enter text: ", "Department")
+        self.assertEqual(result, "Computer")
