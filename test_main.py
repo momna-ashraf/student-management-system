@@ -1,3 +1,4 @@
+import json
 import unittest
 from unittest.mock import patch
 from main import Student, StudentManagementSystem, get_valid_age, get_valid_marks, get_valid_id, get_valid_text
@@ -144,3 +145,32 @@ class TestStudentManagementSystem(unittest.TestCase):
             result = system.load_students()
         self.assertTrue(result)
         self.assertEqual(system.students, [])
+
+    def test_load_students_empty_file(self):
+        system = StudentManagementSystem()
+        with patch("builtins.open") as mock_open:
+            mock_file = mock_open.return_value.__enter__.return_value
+            mock_file.read.return_value = ""
+            result = system.load_students()
+        self.assertTrue(result)
+        self.assertEqual(system.students, [])
+
+    def test_load_students_invalid_json_file(self):
+        system = StudentManagementSystem()
+        with patch("builtins.open", ) as mock_open:
+            mock_file = mock_open.return_value.__enter__.return_value
+            mock_file.read.return_value = "Hello"
+            with patch("builtins.print") as mock_print:
+                result = system.load_students()
+        self.assertFalse(result)
+        mock_print.assert_any_call("There seems to be an error with students data\nKindly handle it.")
+
+    def test_load_students_reject_invalid_data(self):
+        system = StudentManagementSystem()
+        with patch("builtins.open") as mock_open:
+            mock_file = mock_open.return_value.__enter__.return_value
+            mock_file.read.return_value = '{"student": 1}'
+            with patch("builtins.print") as mock_print:
+                result = system.load_students()
+        mock_print.assert_any_call("Loading data failed because the JSON data must be a list.")
+        self.assertFalse(result)
