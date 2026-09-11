@@ -156,7 +156,7 @@ class TestStudentManagementSystem(unittest.TestCase):
 
     def test_load_students_invalid_json_file(self):
         system = StudentManagementSystem()
-        with patch("builtins.open" ) as mock_open:
+        with patch("builtins.open") as mock_open:
             mock_file = mock_open.return_value.__enter__.return_value
             mock_file.read.return_value = "Hello"
             with patch("builtins.print") as mock_print:
@@ -200,3 +200,50 @@ class TestStudentManagementSystem(unittest.TestCase):
             indent=4
         )
         self.assertTrue(result)
+
+    def test_invalid_student_not_appended(self):
+        system = StudentManagementSystem()
+        system.convert_students(["hello"])
+        self.assertEqual(system.students, [])
+
+    def test_duplicate_id_student_not_appended(self):
+        system = StudentManagementSystem()
+        data = [
+            {
+                "student_id": 1,
+                "name": "Minahil",
+                "age": 21,
+                "department": "Computer Engineering",
+                "marks": 90
+            },
+            {
+                "student_id": 1,
+                "name": "Ayesha",
+                "age": 22,
+                "department": "Electrical Engineering",
+                "marks": 85
+            }
+        ]
+        system.convert_students(data)
+        self.assertEqual(len(system.students), 1)
+
+    def test_valid_student_appended(self):
+        system = StudentManagementSystem()
+        data = [
+            {
+                "student_id": 1,
+                "name": "Minahil",
+                "age": 21,
+                "department": "Computer Engineering",
+                "marks": 90
+            },
+            {
+                "student_id": 2,
+                "name": "Ayesha",
+                "age": 22,
+                "department": "Electrical Engineering",
+                "marks": 85
+            }
+        ]
+        system.convert_students(data)
+        self.assertEqual(len(system.students), 2)
