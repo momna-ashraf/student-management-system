@@ -1,6 +1,4 @@
-import json
-
-
+from database import Database
 def display_menu():
     print("\n========== Student Management System ============")
     print("1. Add Student")
@@ -12,10 +10,9 @@ def display_menu():
 
 
 class StudentManagementSystem:
-    def __init__(self, students=None):
-        if students is None:
-            students = []
-        self.students = students
+    def __init__(self):
+        self.db = Database()
+
 
     def add_student(self):
         print("\n======= Add Student ========")
@@ -33,25 +30,23 @@ class StudentManagementSystem:
         department_name = get_valid_text("Enter student department: ", "Department")
 
         student_marks = get_valid_marks("Enter student marks: ")
+        added = self.db.add_student(student_id, student_name, student_age, department_name, student_marks)
 
-        student = Student(student_id, student_name, student_age, department_name, student_marks)
-        self.students.append(student)
-        if not self.save_students():
+        if not added:
             print("Could not save student data.")
-            self.students.remove(student)
         else:
             print("Student added successfully!\n")
 
     def view_students(self):
+        students = self.db.get_all_students()
         print("\n======= View Students ========")
-        if not self.students:
+        if not students:
             print("No students found.")
             return
-
-        print("\n====== Students list ========")
-        for num, student in enumerate(self.students, start=1):
-            print(f"\nStudent {num}")
-            student.display_student()
+        else:
+            print("\n====== Students list ========")
+            for student in students:
+               Student(* student).display_student()
 
     def search_student(self):
         print("\n======= Search Student ========")
@@ -86,13 +81,10 @@ class StudentManagementSystem:
             if to_update not in validators:
                 print("Please enter a valid choice.")
                 continue
-            old_value = getattr(student, to_update)
             new_value = validators[to_update](f"Enter student's new {to_update}: ")
-            setattr(student, to_update, new_value)
-
-            if not self.save_students():
+            updated = self.db.update_student(update_student_id,to_update,new_value)
+            if not updated:
                 print("Could not update student data.")
-                setattr(student, to_update, old_value)
             else:
                 print("Updated successfully!\n")
             break
@@ -105,74 +97,20 @@ class StudentManagementSystem:
 
         if student:
             student.display_student()
-            self.students.remove(student)
-            if not self.save_students():
+            deleted = self.db.delete_student(id_delete)
+            if not deleted:
                 print("Could not delete student data.")
-                self.students.append(student)
             else:
                 print("Student deleted successfully!")
         else:
             print("Student not found.")
 
-    def find_student_by_id(self, student_id):
-        for student in self.students:
-            if student.id == student_id:
-                return student
-        return None
-
-    def save_students(self):
-        student_data = [student.to_dict() for student in self.students]
-        try:
-            with open("students.json", "w") as file:
-                json.dump(student_data, file, indent=4)
-            return True
-        except OSError:
-            return False
-
-    def load_students(self):
-        try:
-            with open("students.json", "r") as file:
-                content = file.read()
-                if content.strip() == "":
-                    self.students = []
-                    return True
-                data = json.loads(content)
-                if not isinstance(data, list):
-                    print("Loading data failed because the JSON data must be a list.")
-                    return False
-                self.students = []
-                self.convert_students(data)
-                return True
-
-        except FileNotFoundError:
-            self.students = []
-            return True
-        except json.JSONDecodeError:
-            print("There seems to be an error with students data\nKindly handle it.")
-            return False
-
-    def convert_students(self, data):
-        student_ids = set()
-        for student_data in data:
-            is_dict_valid = validate_dict(student_data)
-            if not is_dict_valid:
-                continue
-            student_id = student_data["student_id"]
-            if student_id in student_ids:
-                print(f"Duplicate student ID {student_id}.")
-                print("Skipping this student.")
-                continue
-            student = Student(
-                student_data["student_id"],
-                student_data["name"],
-                student_data["age"],
-                student_data["department"],
-                student_data["marks"]
-            )
-
-            self.students.append(student)
-            student_ids.add(student_id)
-
+    def find_student_by_id(self, id):
+        student = self.db.get_student_by_id(id)
+        if student is None:
+             return None
+        else:
+            return Student(*student)
 
 class Student:
     def __init__(self, student_id, name, age, department, marks):
@@ -191,14 +129,6 @@ class Student:
         print(f"Marks: {self.marks}")
         print("--------------------------")
 
-    def to_dict(self):
-        return {
-            "student_id": self.id,
-            "name": self.name,
-            "age": self.age,
-            "department": self.department,
-            "marks": self.marks
-        }
 
 
 def get_valid_age(message):
@@ -250,103 +180,37 @@ def get_valid_id(message):
             print("Please enter a valid integer for the Student ID.")
 
 
-def validate_student_data(student_data):
-    for key, value in student_data.items():
-        if key == "student_id":
-            if not isinstance(value, int) or isinstance(value, bool):
-                print("Student ID is not an integer.")
-                return False
-            if value < 0:
-                print("Student ID is negative.")
-                return False
-
-        elif key == "name":
-            if not isinstance(value, str):
-                print("Student name is not a string.")
-                return False
-            name = value.strip()
-
-            if name == "":
-                print("Student name can't be empty.")
-                return False
-
-            if not name.replace(" ", "").isalpha():
-                print("Student name doesn't contain only letters and spaces.")
-                return False
-        elif key == "age":
-            if not isinstance(value, int) or isinstance(value, bool):
-                print("Student age is not an integer.")
-                return False
-            if value < 15 or value > 30:
-                print("Student age must be between 15 and 30.")
-                return False
-        elif key == "department":
-            if not isinstance(value, str):
-                print("Student department is not a string.")
-                return False
-            department = value.strip()
-            if department == "":
-                print("Student department can't be empty.")
-                return False
-
-            if not department.replace(" ", "").isalpha():
-                print("Student department must contain only letters and spaces.")
-                return False
-
-        elif key == "marks":
-            if not isinstance(value, int) or isinstance(value, bool):
-                print("Student marks is not an integer")
-                return False
-            if not 0 <= value <= 100:
-                print("Student marks are not between 0-100")
-                return False
-    return True
-
-
-def validate_dict(student_data):
-    required = {"student_id", "name", "age", "department", "marks"}
-    if not isinstance(student_data, dict):
-        print("Skipping this student.")
-        return False
-    has_required_fields = student_data.keys() >= required
-    if not has_required_fields:
-        print("Student data is missing a required field.")
-        print("Skipping this student.")
-        return False
-    if not validate_student_data(student_data):
-        print("Skipping this student.")
-        return False
-    return True
-
 
 def main():
-    if not system.load_students():
-        return
-    menu_actions = {
+    try:
+        menu_actions = {
         1: system.add_student,
         2: system.view_students,
         3: system.search_student,
         4: system.update_student,
         5: system.delete_student,
 
-    }
-    while True:
-        display_menu()
-        try:
-            choice = int(input("\nEnter your choice: "))
-        except ValueError:
-            print("Please enter a valid number.")
-            continue
+        }
+        while True:
+            display_menu()
+            try:
+               choice = int(input("\nEnter your choice: "))
+            except ValueError:
+               print("Please enter a valid number.")
+               continue
 
-        if choice in menu_actions:
-            menu_actions[choice]()
+            if choice in menu_actions:
+               menu_actions[choice]()
 
-        elif choice == 6:
-            print("Thank you for using Student Management System")
-            break
+            elif choice == 6:
+               print("Thank you for using Student Management System")
+               break
 
-        else:
-            print("Invalid choice. Please try again.")
+            else:
+               print("Invalid choice. Please try again.")
+
+    finally:
+            system.db.close()
 
 
 if __name__ == "__main__":
