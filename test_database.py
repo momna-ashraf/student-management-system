@@ -1,4 +1,3 @@
-
 import unittest
 import tempfile
 import os
@@ -16,12 +15,11 @@ class MyTestCase(unittest.TestCase):
         self.db = Database(self.db_path)
 
     def tearDown(self):
-
         self.db.close()
         os.unlink(self.db_path)
 
     def test_add_student(self):
-        result = self.db.add_student(1,"Alisha",19,"CE",99)
+        result = self.db.add_student(1, "Alisha", 19, "CE", 99)
         self.assertTrue(result)
         student = self.db.get_student_by_id(1)
 
