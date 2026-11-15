@@ -10,6 +10,7 @@ A console-based **Student Management System built with Python**, developed incre
 - SQLite database integration using Python's `sqlite3` module
 - Layered application architecture with separate responsibilities
 - Dedicated database layer using a `Database` class
+- Dependency injection for database management
 - Parameterized SQL queries
 - Database-level constraints and duplicate ID prevention
 - Proper database connection management
@@ -52,8 +53,7 @@ Student Management System/
 ├── test_user_interface.py
 │
 ├── .gitignore
-├── README.md
-└── students.db
+└── README.md
 ```
 
 ### Module Responsibilities
@@ -94,6 +94,8 @@ The application uses SQLite for persistent data storage.
 
 The database is automatically created when the application runs if it does not already exist.
 
+The local SQLite database file (`students.db`) is excluded from version control through `.gitignore`.
+
 ## Testing
 
 The project uses Python's built-in `unittest` framework.
@@ -101,12 +103,12 @@ The project uses Python's built-in `unittest` framework.
 **Test files:**
 
 - `test_database.py` — Tests SQLite database operations, including adding, retrieving, updating, and deleting students, duplicate IDs, and database constraints.
-- `test_user_interface.py` — Tests user input validation and interface-related behavior.
+- `test_user_interface.py` — Tests user input validation and student display functionality.
 
 Run the complete test suite:
 
 ```bash
-python -m unittest discover
+python -m unittest discover -v
 ```
 
 ## Technologies
@@ -132,7 +134,7 @@ python -m unittest discover
 | 8 | Testing & project organization | ✅ |
 | 9 | SQLite database integration | ✅ |
 | 10 | Application architecture | ✅ |
-| 11 | Final refactoring & code quality | ⏳ |
+| 11 | Final refactoring & code quality | ✅ |
 | 12 | Tkinter GUI | ⏳ |
 | 1.0 | Final documentation, screenshots & release | ⏳ |
 
@@ -167,7 +169,6 @@ The SQLite database file will be created automatically when the application star
 
 ## Future Development
 
-- Final code refactoring and quality improvements
 - Tkinter graphical user interface
 - Final documentation, screenshots, and project release
 
