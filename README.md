@@ -1,37 +1,82 @@
 # Student Management System
 
-A console-based **Student Management System built with Python**, developed incrementally to practice programming, software design, Object-Oriented Programming, database management, testing, and Git/GitHub.
+A console-based **Student Management System built with Python**, developed incrementally to practice programming, software design, Object-Oriented Programming, database management, application architecture, testing, and Git/GitHub.
 
 ## Features
 
-* Add, view, search, update, and delete students
-* Input validation for student data
-* Object-Oriented Programming with `Student` and `StudentManagementSystem`
-* SQLite database integration using Python's `sqlite3` module
-* Separate database layer using a dedicated `Database` class
-* Parameterized SQL queries
-* Database-level constraints and duplicate ID prevention
-* Proper database connection management
-* Unit testing with Python's `unittest` framework
-* Separate test suites for application validation and database operations
+- Add, view, search, update, and delete students
+- Input validation for student data
+- Object-Oriented Programming with `Student` and `StudentManagementSystem`
+- SQLite database integration using Python's `sqlite3` module
+- Layered application architecture with separate responsibilities
+- Dedicated database layer using a `Database` class
+- Parameterized SQL queries
+- Database-level constraints and duplicate ID prevention
+- Proper database connection management
+- Unit testing with Python's `unittest` framework
 
 ## Student Information
 
 Each student record contains:
 
-* Student ID
-* Name
-* Age
-* Department
-* Marks
+- Student ID
+- Name
+- Age
+- Department
+- Marks
 
 ## Validation Rules
 
-* Student ID must be a non-negative, unique integer
-* Name and department cannot be empty
-* Name and department may contain only letters and spaces
-* Age must be between 15 and 30
-* Marks must be between 0 and 100
+- Student ID must be a non-negative, unique integer
+- Name and department cannot be empty
+- Name and department may contain only letters and spaces
+- Age must be between 15 and 30
+- Marks must be between 0 and 100
+
+## Application Architecture
+
+The project follows a layered structure to separate user interaction, application logic, data management, and student representation.
+
+### Project Structure
+
+```text
+Student Management System/
+│
+├── main.py
+├── student.py
+├── database.py
+├── student_management_system.py
+├── user_interface.py
+│
+├── test_database.py
+├── test_user_interface.py
+│
+├── .gitignore
+├── README.md
+└── students.db
+```
+
+### Module Responsibilities
+
+| Module | Responsibility |
+|---|---|
+| `main.py` | Application entry point and object initialization |
+| `student.py` | Student data model |
+| `database.py` | SQLite database operations and persistence |
+| `student_management_system.py` | Application logic and coordination |
+| `user_interface.py` | Menu, user input, validation, and output |
+
+### Application Flow
+
+```text
+User Interface
+      ↓
+Student Management System
+      ↓
+Database
+```
+
+The `Student` model represents student records and is used by the application and user interface layers.
 
 ## Database Structure
 
@@ -55,8 +100,8 @@ The project uses Python's built-in `unittest` framework.
 
 **Test files:**
 
-* `test_main.py` — Tests input validation and Student functionality.
-* `test_database.py` — Tests SQLite database operations, including adding, retrieving, updating, and deleting students, duplicate IDs, and database constraints.
+- `test_database.py` — Tests SQLite database operations, including adding, retrieving, updating, and deleting students, duplicate IDs, and database constraints.
+- `test_user_interface.py` — Tests user input validation and interface-related behavior.
 
 Run the complete test suite:
 
@@ -66,12 +111,12 @@ python -m unittest discover
 
 ## Technologies
 
-* Python 3
-* SQLite
-* `sqlite3`
-* `unittest`
-* Git & GitHub
-* PyCharm
+- Python 3
+- SQLite
+- `sqlite3`
+- `unittest`
+- Git & GitHub
+- PyCharm
 
 ## Project Roadmap
 
@@ -86,12 +131,19 @@ python -m unittest discover
 | 7 | Refactoring & maintainability | ✅ |
 | 8 | Testing & project organization | ✅ |
 | 9 | SQLite database integration | ✅ |
-| 10 | Application architecture | ⏳ |
+| 10 | Application architecture | ✅ |
 | 11 | Final refactoring & code quality | ⏳ |
 | 12 | Tkinter GUI | ⏳ |
 | 1.0 | Final documentation, screenshots & release | ⏳ |
 
 ## Getting Started
+
+### Prerequisites
+
+- Python 3 installed on your system
+- Git installed on your system
+
+### Installation
 
 1. Clone the repository:
 
@@ -115,9 +167,9 @@ The SQLite database file will be created automatically when the application star
 
 ## Future Development
 
-* Improved application architecture
-* Code quality and maintainability improvements
-* Tkinter graphical user interface
+- Final code refactoring and quality improvements
+- Tkinter graphical user interface
+- Final documentation, screenshots, and project release
 
 ---
 
