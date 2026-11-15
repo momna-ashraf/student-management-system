@@ -98,7 +98,7 @@ class TestUserInterface(unittest.TestCase):
         student = Student(1, "Minahil", 20, "Computer Engineering", 90)
 
         with patch("builtins.print") as mock_print:
-            student.display_student()
+            self.ui.display_student(student)
 
         mock_print.assert_any_call("Student Name: Minahil")
         mock_print.assert_any_call("ID: 1")

@@ -1,13 +1,16 @@
+from database import Database
 from student_management_system import StudentManagementSystem
 from user_interface import UI
+
+
 def main():
-    system = StudentManagementSystem()
+    db = Database()
+    system = StudentManagementSystem(db)
     ui = UI(system)
     try:
         ui.run()
-
     finally:
-            system.db.close()
+        db.close()
 
 
 if __name__ == "__main__":

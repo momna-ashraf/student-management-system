@@ -168,6 +168,18 @@ class MyTestCase(unittest.TestCase):
 
         self.assertEqual(students, [])
 
+    def test_add_student_invalid_age(self):
+        result = self.db.add_student(1, "Ali", 40, "CE", 90)
+
+        self.assertFalse(result)
+        self.assertIsNone(self.db.get_student_by_id(1))
+
+    def test_add_student_invalid_marks(self):
+        result = self.db.add_student(1, "Ali", 20, "CE", 150)
+
+        self.assertFalse(result)
+        self.assertIsNone(self.db.get_student_by_id(1))
+
 
 if __name__ == '__main__':
     unittest.main()

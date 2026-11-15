@@ -75,7 +75,7 @@ class UI:
         student = self.system.search_student(student_id)
         if student:
             print("Student found successfully")
-            student.display_student()
+            self.display_student(student)
         else:
             print("Student not found.")
 
@@ -85,10 +85,9 @@ class UI:
         if not students:
             print("No students found.")
             return
-        else:
-            print("\n====== Students list ========")
-            for student in students:
-                student.display_student()
+        print("\n====== Students list ========")
+        for student in students:
+            self.display_student(student)
 
     def update_student(self):
         print("\n======= Update Student ========")
@@ -103,7 +102,7 @@ class UI:
             print("Student not found.")
             return
 
-        student.display_student()
+        self.display_student(student)
 
         validators = {
             "name": lambda message: self.get_valid_text(message, "Name"),
@@ -143,7 +142,7 @@ class UI:
         student = self.system.find_student_by_id(id_delete)
 
         if student:
-            student.display_student()
+            self.display_student(student)
             deleted = self.system.delete_student(id_delete)
             if not deleted:
                 print("Could not delete student data.")
@@ -196,3 +195,12 @@ class UI:
                 return student_id
             except ValueError:
                 print("Please enter a valid integer for the Student ID.")
+
+    def display_student(self, student):
+        print("--------------------------")
+        print(f"Student Name: {student.name}")
+        print(f"ID: {student.id}")
+        print(f"Age: {student.age}")
+        print(f"Department: {student.department}")
+        print(f"Marks: {student.marks}")
+        print("--------------------------")

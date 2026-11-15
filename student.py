@@ -6,11 +6,3 @@ class Student:
         self.department = department
         self.marks = marks
 
-    def display_student(self):
-        print("--------------------------")
-        print(f"Student Name: {self.name}")
-        print(f"ID: {self.id}")
-        print(f"Age: {self.age}")
-        print(f"Department: {self.department}")
-        print(f"Marks: {self.marks}")
-        print("--------------------------")

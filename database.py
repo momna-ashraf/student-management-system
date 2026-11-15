@@ -28,6 +28,7 @@ class Database:
             self.connection.commit()
             return True
         except sqlite3.IntegrityError:
+            self.connection.rollback()
             return False
 
     def get_all_students(self):
@@ -50,15 +51,20 @@ class Database:
             return self.cursor.rowcount > 0
 
         except sqlite3.IntegrityError:
+            self.connection.rollback()
             return False
 
     def delete_student(self, student_id):
-        self.cursor.execute(
-            "DELETE FROM students WHERE id = ?",
-            (student_id,)
-        )
-        self.connection.commit()
-        return self.cursor.rowcount > 0
+        try:
+            self.cursor.execute(
+                "DELETE FROM students WHERE id = ?",
+                (student_id,)
+            )
+            self.connection.commit()
+            return self.cursor.rowcount > 0
+        except sqlite3.Error:
+            self.connection.rollback()
+            return False
 
     def close(self):
         self.connection.close()
